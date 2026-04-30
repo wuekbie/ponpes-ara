@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ponpes ARA – Pondok Pesantren Tahfidz & Dakwah Abu Hurairah Ra.</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dark: #A07830;
+    --emerald: #1A4A3C;
+    --emerald-mid: #245C4A;
+    --emerald-light: #2E7A60;
+    --cream: #FAF6EE;
+    --cream-dark: #F0E8D4;
+    --white: #FFFFFF;
+    --text-dark: #1A1A1A;
+    --text-mid: #4A4A4A;
+    --text-light: #8A8A7A;
+    --shadow: 0 20px 60px rgba(0,0,0,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    background: rgba(26,74,60,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+    transition: all 0.3s ease;
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 14px;
+  }
+
+  .nav-logo .logo-badge {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Amiri', serif;
+    font-size: 18px; color: white; font-weight: 700;
+    box-shadow: 0 4px 15px rgba(201,168,76,0.4);
+  }
+
+  .nav-logo .logo-text { line-height: 1.2; }
+  .nav-logo .logo-text span { display: block; }
+  .nav-logo .logo-text .name { font-size: 15px; font-weight: 600; color: var(--gold-light); letter-spacing: 0.5px; }
+  .nav-logo .logo-text .tagline { font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 1px; text-transform: uppercase; }
+
+  .nav-links { display: flex; gap: 6px; align-items: center; }
+  .nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    padding: 8px 14px; border-radius: 8px;
+    transition: all 0.25s ease;
+    letter-spacing: 0.3px;
+  }
+  .nav-links a:hover { background: rgba(201,168,76,0.15); color: var(--gold-light); }
+  .nav-links .btn-daftar {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: white !important;
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(201,168,76,0.3);
+  }
+  .nav-links .btn-daftar:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.4); background: rgba(201,168,76,0.15) !important; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, var(--emerald) 0%, var(--emerald-mid) 50%, #0F2E24 100%);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center;
+  }
+
+  .hero-pattern {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(201,168,76,0.06) 0%, transparent 40%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A84C' fill-opacity='0.04'%3E%3Cpath d='M30 0L60 30L30 60L0 30Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .hero-arabic {
+    position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
+    font-family: 'Amiri', serif;
+    font-size: 320px; line-height: 1;
+    color: rgba(201,168,76,0.05);
+    pointer-events: none; user-select: none;
+    letter-spacing: -10px;
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 1200px; margin: 0 auto;
+    padding: 120px 40px 80px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+
+  .hero-left { animation: fadeInUp 0.9s ease both; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 100px;
+    padding: 6px 16px 6px 8px;
+    margin-bottom: 28px;
+  }
+  .hero-badge .dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; animation: pulse 2s infinite; }
+  .hero-badge span { font-size: 12px; color: var(--gold-light); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero-arabic-title {
+    font-family: 'Amiri', serif;
+    font-size: 52px; color: var(--gold-light);
+    line-height: 1.3; margin-bottom: 16px;
+    text-shadow: 0 2px 20px rgba(201,168,76,0.3);
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 900;
+    color: white; line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .hero-title .highlight { color: var(--gold-light); }
+
+  .hero-subtitle {
+    font-size: 13px; color: rgba(255,255,255,0.5);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero-desc {
+    font-size: 16px; color: rgba(255,255,255,0.7);
+    line-height: 1.8; max-width: 480px; margin-bottom: 40px;
+  }
+
+  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: white; border: none; cursor: pointer;
+    padding: 14px 32px; border-radius: 10px;
+    font-size: 15px; font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 8px 24px rgba(201,168,76,0.35);
+    transition: all 0.3s ease;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(201,168,76,0.5); }
+
+  .btn-outline {
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: white; background: transparent; cursor: pointer;
+    padding: 14px 32px; border-radius: 10px;
+    font-size: 15px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.3s ease;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); background: rgba(201,168,76,0.08); }
+
+  .hero-right {
+    animation: fadeInRight 0.9s 0.2s ease both;
+    position: relative;
+  }
+
+  .hero-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 28px 24px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative; overflow: hidden;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+  .stat-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.1); }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px; font-weight: 900;
+    color: var(--gold-light); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 400; }
+
+  .stat-card.large { grid-column: span 2; }
+  .stat-card.large .stat-content { display: flex; align-items: center; gap: 30px; }
+  .stat-card.large .stat-num { font-size: 56px; }
+
+  /* ── SECTION COMMONS ── */
+  section { padding: 100px 40px; }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold-dark); font-weight: 600; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::before { content: ''; display: block; width: 30px; height: 2px; background: var(--gold); }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px; font-weight: 800;
+    color: var(--emerald); line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .section-desc {
+    font-size: 16px; color: var(--text-mid);
+    line-height: 1.8; max-width: 580px;
+  }
+
+  /* ── ABOUT ── */
+  #tentang { background: var(--white); }
+
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+
+  .about-image-wrap {
+    position: relative;
+  }
+
+  .about-img-main {
+    width: 100%; aspect-ratio: 4/5;
+    background: linear-gradient(160deg, var(--emerald), var(--emerald-light));
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+
+  .about-img-main .placeholder-art {
+    font-family: 'Amiri', serif;
+    font-size: 120px; color: rgba(255,255,255,0.1);
+    text-align: center;
+  }
+
+  .about-img-main .img-label {
+    position: absolute; bottom: 24px; left: 24px; right: 24px;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
+    border-radius: 12px; padding: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .img-label p { color: white; font-size: 13px; }
+  .img-label span { color: var(--gold-light); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+
+  .about-float {
+    position: absolute; bottom: -24px; right: -24px;
+    background: var(--gold);
+    border-radius: 20px; padding: 24px 28px;
+    box-shadow: 0 20px 40px rgba(201,168,76,0.3);
+  }
+  .about-float .num { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 900; color: white; line-height: 1; }
+  .about-float .txt { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 4px; }
+
+  .about-right {}
+  .visi-misi { margin-top: 36px; }
+  .vm-item { display: flex; gap: 20px; margin-bottom: 28px; }
+  .vm-icon {
+    width: 48px; height: 48px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .vm-text h4 { font-size: 16px; font-weight: 600; color: var(--emerald); margin-bottom: 6px; }
+  .vm-text p { font-size: 14px; color: var(--text-mid); line-height: 1.7; }
+
+  /* ── PROGRAM ── */
+  #program { background: var(--cream); }
+
+  .program-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 60px; }
+
+  .program-card {
+    background: var(--white);
+    border-radius: 20px; padding: 36px 28px;
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: all 0.35s ease;
+    position: relative; overflow: hidden;
+    cursor: pointer;
+  }
+  .program-card::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--emerald), var(--emerald-light));
+    transform: scaleX(0); transition: transform 0.35s ease;
+    transform-origin: left;
+  }
+  .program-card:hover { transform: translateY(-8px); box-shadow: 0 24px 48px rgba(0,0,0,0.1); }
+  .program-card:hover::after { transform: scaleX(1); }
+
+  .program-icon {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; margin-bottom: 24px;
+  }
+
+  .program-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--emerald); margin-bottom: 12px;
+  }
+  .program-card p { font-size: 14px; color: var(--text-mid); line-height: 1.7; }
+
+  .program-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+  .tag {
+    background: var(--cream); border: 1px solid var(--cream-dark);
+    border-radius: 100px; padding: 4px 12px;
+    font-size: 11px; color: var(--text-mid); font-weight: 500;
+  }
+
+  /* ── GALERI ── */
+  #galeri { background: var(--emerald); }
+  #galeri .section-title { color: var(--white); }
+  #galeri .section-label { color: var(--gold-light); }
+  #galeri .section-label::before { background: var(--gold-light); }
+  #galeri .section-desc { color: rgba(255,255,255,0.6); }
+
+  .galeri-filter {
+    display: flex; gap: 10px; margin: 36px 0 32px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 9px 22px; border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent; color: rgba(255,255,255,0.7);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.25s ease;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--gold); border-color: var(--gold); color: white;
+  }
+
+  .galeri-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    gap: 16px;
+  }
+
+  .galeri-item {
+    border-radius: 16px; overflow: hidden;
+    position: relative; cursor: pointer;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+  }
+  .galeri-item:hover { transform: scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+
+  .galeri-item.span2 { grid-column: span 2; }
+  .galeri-item.tall { grid-row: span 2; }
+
+  .galeri-thumb {
+    width: 100%; aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; position: relative;
+  }
+  .galeri-item.span2 .galeri-thumb { aspect-ratio: 2/1; }
+  .galeri-item.tall .galeri-thumb { aspect-ratio: 1/2; }
+
+  .galeri-bg { position: absolute; inset: 0; }
+  .galeri-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+    display: flex; align-items: flex-end; padding: 20px;
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .galeri-item:hover .galeri-overlay { opacity: 1; }
+  .galeri-overlay p { color: white; font-size: 13px; font-weight: 500; }
+
+  /* galeri item colors */
+  .gi1 .galeri-bg { background: linear-gradient(135deg, #1A5C40 0%, #0D3D28 100%); }
+  .gi2 .galeri-bg { background: linear-gradient(135deg, #2D4A6B 0%, #1A2E42 100%); }
+  .gi3 .galeri-bg { background: linear-gradient(135deg, #5C3A1A 0%, #3D2410 100%); }
+  .gi4 .galeri-bg { background: linear-gradient(135deg, #3A1A5C 0%, #241042 100%); }
+  .gi5 .galeri-bg { background: linear-gradient(135deg, #1A5C5C 0%, #0D3D3D 100%); }
+  .gi6 .galeri-bg { background: linear-gradient(135deg, #5C5C1A 0%, #3D3D0D 100%); }
+
+  .galeri-icon { font-size: 40px; position: relative; z-index: 1; }
+  .galeri-type {
+    position: absolute; top: 14px; right: 14px;
+    background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
+    border-radius: 8px; padding: 4px 10px;
+    font-size: 11px; color: rgba(255,255,255,0.8);
+    font-weight: 500; z-index: 2;
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  /* ── ARTIKEL ── */
+  #artikel { background: var(--white); }
+
+  .artikel-grid {
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 28px;
+    margin-top: 60px;
+  }
+
+  .artikel-card {
+    background: var(--cream); border-radius: 20px; overflow: hidden;
+    transition: all 0.3s ease; cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .artikel-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+
+  .artikel-img {
+    aspect-ratio: 16/9;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 50px; position: relative; overflow: hidden;
+  }
+  .artikel-card.featured .artikel-img { aspect-ratio: 16/10; font-size: 70px; }
+  .a1 .artikel-img { background: linear-gradient(135deg, #1A4A3C, #2E7A60); }
+  .a2 .artikel-img { background: linear-gradient(135deg, #2A3A5C, #1A2540); }
+  .a3 .artikel-img { background: linear-gradient(135deg, #4A2A1A, #6B3A24); }
+
+  .artikel-body { padding: 24px; }
+  .artikel-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .artikel-cat {
+    background: rgba(26,74,60,0.1); color: var(--emerald);
+    border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .artikel-date { font-size: 12px; color: var(--text-light); }
+
+  .artikel-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; color: var(--emerald);
+    line-height: 1.4; margin-bottom: 10px;
+  }
+  .artikel-card.featured h3 { font-size: 24px; }
+  .artikel-card p { font-size: 13px; color: var(--text-mid); line-height: 1.7; }
+
+  .read-more {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--gold-dark); font-size: 13px; font-weight: 600;
+    margin-top: 16px; text-decoration: none;
+    transition: gap 0.2s ease;
+  }
+  .read-more:hover { gap: 10px; }
+
+  /* ── KEGIATAN/JADWAL ── */
+  #kegiatan { background: var(--cream); }
+
+  .jadwal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 60px; }
+
+  .jadwal-card {
+    background: var(--white); border-radius: 20px;
+    overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+
+  .jadwal-header {
+    background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
+    padding: 28px 32px;
+  }
+  .jadwal-header h3 { font-size: 18px; font-weight: 600; color: white; margin-bottom: 4px; }
+  .jadwal-header p { font-size: 13px; color: rgba(255,255,255,0.6); }
+
+  .jadwal-list { padding: 8px; }
+  .jadwal-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 24px; border-radius: 12px;
+    transition: background 0.2s ease;
+  }
+  .jadwal-item:hover { background: var(--cream); }
+
+  .jadwal-time {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; font-weight: 700; color: var(--gold-dark);
+    min-width: 70px;
+  }
+  .jadwal-info h4 { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+  .jadwal-info p { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+
+  .jadwal-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--gold); flex-shrink: 0; margin-left: auto;
+  }
+
+  /* ── PENGUMUMAN ── */
+  #pengumuman { background: var(--white); }
+
+  .pengumuman-wrap { display: grid; grid-template-columns: 1fr 360px; gap: 40px; margin-top: 60px; }
+
+  .pengumuman-list {}
+  .pengumuman-item {
+    display: flex; gap: 20px; padding: 24px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: all 0.2s ease; cursor: pointer;
+  }
+  .pengumuman-item:hover { padding-left: 10px; }
+
+  .pengumuman-date {
+    min-width: 56px; text-align: center;
+    background: var(--cream); border-radius: 12px; padding: 10px 8px;
+    height: fit-content;
+  }
+  .pengumuman-date .day { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: var(--emerald); line-height: 1; }
+  .pengumuman-date .month { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+
+  .pengumuman-content h4 { font-size: 16px; font-weight: 600; color: var(--text-dark); margin-bottom: 6px; }
+  .pengumuman-content p { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
+
+  .pengumuman-badge {
+    display: inline-block; margin-top: 8px;
+    padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600;
+  }
+  .badge-penting { background: rgba(220,38,38,0.1); color: #DC2626; }
+  .badge-info { background: rgba(26,74,60,0.1); color: var(--emerald); }
+  .badge-umum { background: rgba(201,168,76,0.1); color: var(--gold-dark); }
+
+  /* Donasi Box */
+  .donasi-box {
+    background: linear-gradient(160deg, var(--emerald) 0%, #0F2E24 100%);
+    border-radius: 24px; padding: 36px 32px;
+    position: relative; overflow: hidden; height: fit-content;
+  }
+  .donasi-box::before {
+    content: ''; position: absolute;
+    right: -30px; top: -30px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.1);
+  }
+  .donasi-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: white; margin-bottom: 10px; position: relative;
+  }
+  .donasi-box p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 24px; position: relative; }
+
+  .donasi-progress { background: rgba(255,255,255,0.1); border-radius: 100px; height: 8px; margin-bottom: 12px; }
+  .donasi-bar { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); width: 68%; }
+
+  .donasi-nums { display: flex; justify-content: space-between; margin-bottom: 24px; }
+  .donasi-nums span { font-size: 12px; color: rgba(255,255,255,0.5); }
+  .donasi-nums strong { font-size: 14px; color: var(--gold-light); font-family: 'Playfair Display', serif; }
+
+  /* ── PROFIL ── */
+  #profil { background: var(--cream); }
+
+  .profil-grid { display: grid; grid-template-columns: 300px 1fr; gap: 60px; margin-top: 60px; }
+
+  .profil-card {
+    background: var(--white); border-radius: 24px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08); text-align: center;
+  }
+
+  .profil-img {
+    width: 100%; aspect-ratio: 1;
+    background: linear-gradient(160deg, var(--emerald), var(--emerald-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px;
+  }
+
+  .profil-info { padding: 28px 24px; }
+  .profil-info h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--emerald); margin-bottom: 4px; }
+  .profil-info .role { font-size: 13px; color: var(--gold-dark); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .profil-info p { font-size: 13px; color: var(--text-mid); line-height: 1.7; }
+
+  .profil-detail {}
+  .profil-detail h3 { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--emerald); margin-bottom: 16px; }
+  .profil-detail .bio { font-size: 15px; color: var(--text-mid); line-height: 1.9; margin-bottom: 32px; }
+
+  .profil-pencapaian { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .pencapaian-item {
+    background: var(--white); border-radius: 16px; padding: 24px 20px; text-align: center;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .pencapaian-item .num { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; color: var(--gold-dark); }
+  .pencapaian-item p { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+  /* ── KONTAK ── */
+  #kontak { background: var(--emerald); }
+  #kontak .section-title { color: white; }
+  #kontak .section-label { color: var(--gold-light); }
+  #kontak .section-label::before { background: var(--gold-light); }
+
+  .kontak-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 60px; }
+
+  .kontak-info { }
+  .kontak-item { display: flex; gap: 20px; margin-bottom: 32px; }
+  .kontak-icon {
+    width: 52px; height: 52px; flex-shrink: 0;
+    background: rgba(201,168,76,0.15); border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .kontak-text h4 { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .kontak-text p { font-size: 16px; color: white; line-height: 1.6; }
+
+  .sosmed { display: flex; gap: 14px; margin-top: 40px; }
+  .sosmed-btn {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; cursor: pointer; text-decoration: none;
+    transition: all 0.25s ease;
+  }
+  .sosmed-btn:hover { background: var(--gold); border-color: var(--gold); transform: translateY(-3px); }
+
+  /* Form */
+  .kontak-form { }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6); margin-bottom: 8px; letter-spacing: 0.5px; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;
+    padding: 14px 18px; color: white; font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.25s ease; outline: none;
+  }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.3); }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .form-group select { cursor: pointer; }
+  .form-group select option { background: var(--emerald); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0A1F18;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 60px 40px 30px;
+  }
+
+  .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 48px; }
+
+  .footer-brand {}
+  .footer-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .footer-logo .badge { width: 48px; height: 48px; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Amiri', serif; font-size: 20px; color: white; font-weight: 700; }
+  .footer-logo .brand-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: white; }
+  .footer-brand p { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.8; max-width: 280px; }
+
+  .footer-col h4 { font-size: 13px; font-weight: 600; color: var(--gold-light); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; }
+  .footer-col a { display: block; font-size: 14px; color: rgba(255,255,255,0.45); text-decoration: none; margin-bottom: 12px; transition: color 0.2s ease; }
+  .footer-col a:hover { color: var(--gold-light); }
+
+  .footer-bottom { max-width: 1200px; margin: 0 auto; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 13px; color: rgba(255,255,255,0.3); }
+  .footer-bottom .ara-badge { font-family: 'Amiri', serif; font-size: 18px; color: var(--gold); }
+
+  /* ── UPLOAD SECTION ── */
+  #upload { background: var(--white); }
+
+  .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 60px; }
+
+  .upload-card {
+    border: 2px dashed rgba(26,74,60,0.2); border-radius: 20px; padding: 40px 28px;
+    text-align: center; transition: all 0.3s ease; cursor: pointer;
+    background: var(--cream);
+  }
+  .upload-card:hover { border-color: var(--emerald); background: rgba(26,74,60,0.03); transform: translateY(-4px); }
+
+  .upload-icon { font-size: 48px; margin-bottom: 16px; }
+  .upload-card h3 { font-size: 18px; font-weight: 700; color: var(--emerald); margin-bottom: 8px; }
+  .upload-card p { font-size: 13px; color: var(--text-mid); line-height: 1.6; margin-bottom: 20px; }
+  .upload-card .upload-types { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+  .upload-type { background: rgba(26,74,60,0.08); color: var(--emerald); border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── MOBILE HAMBURGER ── */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger span { width: 24px; height: 2px; background: white; border-radius: 2px; transition: all 0.3s ease; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .hero-content { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .about-grid { grid-template-columns: 1fr; }
+    .about-image-wrap { display: none; }
+    .program-grid { grid-template-columns: 1fr 1fr; }
+    .artikel-grid { grid-template-columns: 1fr; }
+    .jadwal-grid { grid-template-columns: 1fr; }
+    .pengumuman-wrap { grid-template-columns: 1fr; }
+    .kontak-grid { grid-template-columns: 1fr; }
+    .profil-grid { grid-template-columns: 1fr; }
+    .galeri-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .upload-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 70px 20px; }
+    .hero-content { padding: 110px 20px 60px; }
+    .hero-title { font-size: 34px; }
+    .hero-arabic-title { font-size: 36px; }
+    .section-title { font-size: 30px; }
+    .program-grid { grid-template-columns: 1fr; }
+    .galeri-grid { grid-template-columns: 1fr 1fr; }
+    .galeri-item.span2 { grid-column: span 1; }
+    .profil-pencapaian { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    .upload-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  /* ── MOBILE NAV MENU ── */
+  .mobile-menu {
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: var(--emerald);
+    padding: 100px 30px 40px;
+    flex-direction: column; gap: 6px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: rgba(255,255,255,0.8); text-decoration: none;
+    font-size: 18px; font-weight: 500; padding: 16px 20px;
+    border-radius: 12px; transition: all 0.2s ease;
+  }
+  .mobile-menu a:hover { background: rgba(255,255,255,0.08); color: var(--gold-light); }
+
+  /* ── BACK TO TOP ── */
+  #backTop {
+    position: fixed; bottom: 30px; right: 30px; z-index: 999;
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--gold); border: none; cursor: pointer;
+    display: none; align-items: center; justify-content: center;
+    font-size: 20px; color: white;
+    box-shadow: 0 8px 20px rgba(201,168,76,0.4);
+    transition: all 0.3s ease;
+  }
+  #backTop:hover { transform: translateY(-3px); }
+  #backTop.show { display: flex; }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    background: var(--gold);
+    padding: 10px 0; overflow: hidden;
+  }
+  .ticker { display: flex; gap: 60px; white-space: nowrap; animation: ticker 30s linear infinite; }
+  .ticker span { font-size: 13px; color: var(--emerald); font-weight: 600; }
+  .ticker span::before { content: '❖ '; }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── STATS DASHBOARD ── */
+  #statistik { background: var(--white); padding: 0; }
+
+  .stats-dashboard {
+    background: linear-gradient(135deg, #0D2B22 0%, var(--emerald) 50%, #0D2B22 100%);
+    padding: 70px 40px;
+    position: relative; overflow: hidden;
+  }
+  .stats-dashboard::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Ccircle cx='40' cy='40' r='1' fill='%23C9A84C' fill-opacity='0.06'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .stats-top {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 48px; flex-wrap: wrap; gap: 16px;
+  }
+  .stats-top h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; color: white; font-weight: 700;
+  }
+  .stats-top p { font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 4px; }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 100px; padding: 8px 18px;
+  }
+  .live-dot {
+    width: 8px; height: 8px; background: #4ADE80; border-radius: 50%;
+    animation: livePulse 1.5s infinite;
+    box-shadow: 0 0 0 0 rgba(74,222,128,0.4);
+  }
+  @keyframes livePulse {
+    0% { box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(74,222,128,0); }
+    100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+  }
+  .live-badge span { font-size: 12px; color: #4ADE80; font-weight: 600; letter-spacing: 1px; }
+
+  .stats-main-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .stat-big-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 28px 24px;
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+  }
+  .stat-big-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); }
+
+  .stat-big-card .top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .stat-big-card .icon-wrap {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .icon-green { background: rgba(74,222,128,0.15); }
+  .icon-blue { background: rgba(96,165,250,0.15); }
+  .icon-gold { background: rgba(201,168,76,0.15); }
+  .icon-purple { background: rgba(167,139,250,0.15); }
+
+  .stat-change {
+    font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px;
+    display: flex; align-items: center; gap: 3px;
+  }
+  .change-up { background: rgba(74,222,128,0.15); color: #4ADE80; }
+  .change-down { background: rgba(248,113,113,0.15); color: #F87171; }
+
+  .stat-big-card .big-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px; font-weight: 900;
+    color: white; line-height: 1; margin-bottom: 6px;
+    letter-spacing: -1px;
+  }
+  .stat-big-card .big-label { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+  .mini-chart { margin-top: 18px; display: flex; align-items: flex-end; gap: 4px; height: 32px; }
+  .mini-bar {
+    flex: 1; border-radius: 3px 3px 0 0;
+    background: rgba(255,255,255,0.15);
+    transition: background 0.3s ease;
+    min-height: 4px;
+  }
+  .mini-bar.active { background: var(--gold); }
+  .stat-big-card:hover .mini-bar { background: rgba(255,255,255,0.2); }
+  .stat-big-card:hover .mini-bar.active { background: var(--gold-light); }
+
+  /* Sparkline bottom row */
+  .stats-bottom-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px;
+  }
+
+  .stat-wide-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 28px 28px;
+    backdrop-filter: blur(8px);
+  }
+  .stat-wide-card h4 { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 500; margin-bottom: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  .traffic-list {}
+  .traffic-item { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .traffic-source { font-size: 13px; color: rgba(255,255,255,0.7); min-width: 90px; }
+  .traffic-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.08); border-radius: 100px; overflow: hidden; }
+  .traffic-bar-fill { height: 100%; border-radius: 100px; transition: width 1.5s ease; }
+  .tb-green { background: linear-gradient(90deg, #4ADE80, #22C55E); }
+  .tb-blue { background: linear-gradient(90deg, #60A5FA, #3B82F6); }
+  .tb-gold { background: linear-gradient(90deg, var(--gold-light), var(--gold)); }
+  .tb-purple { background: linear-gradient(90deg, #A78BFA, #7C3AED); }
+  .tb-orange { background: linear-gradient(90deg, #FB923C, #EA580C); }
+  .traffic-pct { font-size: 12px; color: rgba(255,255,255,0.45); min-width: 36px; text-align: right; }
+
+  .stat-donut-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 28px 24px;
+    text-align: center; backdrop-filter: blur(8px);
+  }
+  .stat-donut-card h4 { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 500; margin-bottom: 20px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  .donut-wrap { position: relative; width: 110px; height: 110px; margin: 0 auto 16px; }
+  .donut-svg { transform: rotate(-90deg); }
+  .donut-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 10; }
+  .donut-fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1.5s ease; }
+  .donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .donut-center .pct { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; color: white; line-height: 1; }
+  .donut-center .lbl { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+  .donut-legend { display: flex; flex-direction: column; gap: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .legend-item span { font-size: 12px; color: rgba(255,255,255,0.55); }
+  .legend-item strong { font-size: 12px; color: rgba(255,255,255,0.8); margin-left: auto; }
+
+  /* ── ARTIKEL READ COUNT ── */
+  .artikel-stats {
+    display: flex; align-items: center; gap: 14px; margin-top: 14px;
+    padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.06);
+    flex-wrap: wrap;
+  }
+  .astat {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-light);
+  }
+  .astat .aicon { font-size: 13px; }
+  .astat-views { color: var(--emerald); font-weight: 600; }
+  .astat-hot {
+    background: linear-gradient(135deg, #FF6B35, #F7931E);
+    color: white; font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 100px; letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* Reading progress bar on artikel featured */
+  .read-progress {
+    height: 3px; background: rgba(0,0,0,0.06); border-radius: 100px; margin-top: 16px; overflow: hidden;
+  }
+  .read-progress-fill {
+    height: 100%; border-radius: 100px;
+    background: linear-gradient(90deg, var(--emerald), var(--emerald-light));
+    width: 0%; transition: width 2s ease;
+  }
+
+  @media (max-width: 1024px) {
+    .stats-main-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-bottom-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .stats-main-grid { grid-template-columns: 1fr 1fr; }
+    .stats-bottom-grid { grid-template-columns: 1fr; }
+    .stats-dashboard { padding: 50px 20px; }
+  }
+
+  /* ── ISLAMIC WIDGET PANEL ── */
+  .islamic-panel {
+    background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 100%);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 24px;
+    padding: 28px 24px;
+    display: flex; flex-direction: column; gap: 20px;
+    position: relative; overflow: hidden;
+  }
+  .islamic-panel::before {
+    content: '';
+    position: absolute; top: -30px; right: -30px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Clock */
+  .clock-wrap { text-align: center; }
+  .clock-time {
+    font-family: 'Playfair Display', serif;
+    font-size: 54px; font-weight: 900; color: white;
+    line-height: 1; letter-spacing: -2px;
+    text-shadow: 0 0 40px rgba(201,168,76,0.3);
+  }
+  .clock-time .colon { animation: blink 1s step-end infinite; color: var(--gold-light); }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .clock-secs {
+    font-size: 20px; color: var(--gold);
+    font-family: 'Playfair Display', serif; font-weight: 600;
+    vertical-align: super; margin-left: 3px;
+  }
+  .clock-date { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 6px; letter-spacing: 0.5px; }
+
+  /* Calendar Dual */
+  .dual-calendar {
+    background: rgba(255,255,255,0.06);
+    border-radius: 14px; padding: 16px 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .cal-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .cal-row:last-child { margin-bottom: 0; }
+  .cal-label {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); font-weight: 600;
+  }
+  .cal-val { font-size: 13px; color: white; font-weight: 600; text-align: right; }
+  .cal-hijri-big {
+    text-align: center; padding: 10px 0 4px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 6px;
+  }
+  .cal-hijri-big .hijri-date {
+    font-family: 'Amiri', serif; font-size: 20px; color: var(--gold-light);
+    direction: rtl; letter-spacing: 1px;
+  }
+  .cal-hijri-big .hijri-latin { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; }
+
+  /* Prayer Times */
+  .prayer-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+  }
+  .prayer-header span { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); font-weight: 600; }
+  .prayer-header .next-prayer {
+    background: rgba(201,168,76,0.2); border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 100px; padding: 3px 10px;
+    font-size: 10px; color: var(--gold-light); font-weight: 600;
+  }
+
+  .prayer-grid { display: flex; flex-direction: column; gap: 6px; }
+  .prayer-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 14px; border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+  .prayer-item.active {
+    background: rgba(201,168,76,0.15);
+    border-color: rgba(201,168,76,0.35);
+  }
+  .prayer-item.passed { opacity: 0.45; }
+
+  .prayer-name { font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .prayer-icon { font-size: 14px; }
+  .prayer-time { font-family: 'Playfair Display', serif; font-size: 14px; color: white; font-weight: 700; }
+  .prayer-item.active .prayer-time { color: var(--gold-light); }
+
+  .prayer-countdown {
+    text-align: center; margin-top: 10px;
+    background: rgba(201,168,76,0.1); border-radius: 10px; padding: 8px;
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+  .prayer-countdown .cdown-label { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; }
+  .prayer-countdown .cdown-time { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--gold-light); font-weight: 700; margin-top: 2px; }
+
+  /* Hero layout override to fit 3 cols */
+  .hero-content-3col {
+    max-width: 1280px; margin: 0 auto;
+    padding: 120px 40px 80px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr 320px;
+    gap: 40px; align-items: start;
+  }
+  @media (max-width: 1180px) {
+    .hero-content-3col { grid-template-columns: 1fr 1fr; }
+    .hero-content-3col .hero-right { display: none; }
+  }
+  @media (max-width: 768px) {
+    .hero-content-3col { grid-template-columns: 1fr; padding: 110px 20px 60px; }
+    .clock-time { font-size: 40px; }
+  }
+
+  /* Stats section (now below pengumuman) */
+  #statistik { display: block !important; background: var(--white); padding: 0; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <div class="logo-badge">أبو</div>
+    <div class="logo-text">
+      <span class="name">Ponpes ARA</span>
+      <span class="tagline">Tahfidz & Dakwah</span>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#tentang">Tentang</a>
+    <a href="#program">Program</a>
+    <a href="#galeri">Galeri</a>
+    <a href="#artikel">Artikel</a>
+    <a href="#kegiatan">Kegiatan</a>
+    <a href="#pengumuman">Pengumuman</a>
+    <a href="#profil">Profil</a>
+    <a href="#kontak" class="btn-daftar">Daftar Santri</a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#tentang" onclick="toggleMenu()">Tentang</a>
+  <a href="#program" onclick="toggleMenu()">Program</a>
+  <a href="#galeri" onclick="toggleMenu()">Galeri</a>
+  <a href="#artikel" onclick="toggleMenu()">Artikel</a>
+  <a href="#kegiatan" onclick="toggleMenu()">Kegiatan</a>
+  <a href="#pengumuman" onclick="toggleMenu()">Pengumuman</a>
+  <a href="#profil" onclick="toggleMenu()">Profil</a>
+  <a href="#kontak" onclick="toggleMenu()">Daftar Santri</a>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap" style="margin-top:70px">
+  <div class="ticker">
+    <span>Penerimaan Santri Baru 2025/2026 Telah Dibuka</span>
+    <span>Program Tahfidz Al-Qur'an 30 Juz</span>
+    <span>Kunjungi Pesantren Kami</span>
+    <span>Kegiatan Dakwah Ramadhan 1446 H</span>
+    <span>Penerimaan Santri Baru 2025/2026 Telah Dibuka</span>
+    <span>Program Tahfidz Al-Qur'an 30 Juz</span>
+    <span>Kunjungi Pesantren Kami</span>
+    <span>Kegiatan Dakwah Ramadhan 1446 H</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-arabic">بِسْمِ</div>
+  <div class="hero-content-3col">
+    <!-- LEFT: Main text -->
+    <div class="hero-left">
+      <div class="hero-badge">
+        <div class="dot"></div>
+        <span>Pesantren Unggulan</span>
+      </div>
+      <div class="hero-arabic-title">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+      <div class="hero-subtitle">Pondok Pesantren Tahfidz & Dakwah</div>
+      <h1 class="hero-title">Abu Hurairah <span class="highlight">Ra.</span></h1>
+      <p class="hero-desc">Mencetak generasi Qur'ani yang hafal Al-Qur'an, berakhlak mulia, dan siap berdakwah di tengah masyarakat.</p>
+      <div class="hero-cta">
+        <a href="#kontak" class="btn-primary">Daftar Sekarang</a>
+        <a href="#tentang" class="btn-outline">Pelajari Lebih</a>
+      </div>
+    </div>
+
+    <!-- MIDDLE: Stats -->
+    <div class="hero-right">
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Santri Aktif</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">30</div>
+          <div class="stat-label">Juz Al-Qur'an</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">15+</div>
+          <div class="stat-label">Tahun Berdiri</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">95%</div>
+          <div class="stat-label">Lulusan Hafidz</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Islamic Widget -->
+    <div class="islamic-panel">
+      <!-- Jam -->
+      <div class="clock-wrap">
+        <div class="clock-time">
+          <span id="clkH">00</span><span class="colon">:</span><span id="clkM">00</span><span class="clock-secs" id="clkS">00</span>
+        </div>
+        <div class="clock-date" id="clkDate">Minggu, 27 April 2025</div>
+      </div>
+
+      <!-- Dual Calendar -->
+      <div class="dual-calendar">
+        <div class="cal-row">
+          <div class="cal-label">📅 Masehi</div>
+          <div class="cal-val" id="calMasehi">27 April 2025</div>
+        </div>
+        <div class="cal-row">
+          <div class="cal-label">🌙 Hari</div>
+          <div class="cal-val" id="calHari">Minggu</div>
+        </div>
+        <div class="cal-hijri-big">
+          <div class="hijri-date" id="calHijriArab">٢٨ شَوَّال ١٤٤٦ هـ</div>
+          <div class="hijri-latin" id="calHijriLatin">28 Syawwal 1446 H</div>
+        </div>
+      </div>
+
+      <!-- Waktu Shalat -->
+      <div>
+        <div class="prayer-header">
+          <span>🕌 Waktu Shalat — Mempawah, Kalbar</span>
+          <div class="next-prayer" id="nextPrayerBadge">Berikutnya: Ashar</div>
+        </div>
+        <div class="prayer-grid">
+          <div class="prayer-item" id="p-subuh">
+            <div class="prayer-name"><span class="prayer-icon">🌅</span> Subuh</div>
+            <div class="prayer-time">04:19</div>
+          </div>
+          <div class="prayer-item" id="p-dzuhur">
+            <div class="prayer-name"><span class="prayer-icon">☀️</span> Dzuhur</div>
+            <div class="prayer-time">11:42</div>
+          </div>
+          <div class="prayer-item" id="p-ashar">
+            <div class="prayer-name"><span class="prayer-icon">🌤️</span> Ashar</div>
+            <div class="prayer-time">15:01</div>
+          </div>
+          <div class="prayer-item" id="p-maghrib">
+            <div class="prayer-name"><span class="prayer-icon">🌆</span> Maghrib</div>
+            <div class="prayer-time">17:46</div>
+          </div>
+          <div class="prayer-item" id="p-isya">
+            <div class="prayer-name"><span class="prayer-icon">🌙</span> Isya</div>
+            <div class="prayer-time">18:56</div>
+          </div>
+        </div>
+        <div class="prayer-countdown">
+          <div class="cdown-label">Menuju waktu shalat berikutnya</div>
+          <div class="cdown-time" id="prayerCountdown">00:00:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TENTANG -->
+<section id="tentang">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-image-wrap reveal">
+        <div class="about-img-main">
+          <div class="placeholder-art">🕌</div>
+          <div class="img-label">
+            <span>Kampus Pesantren</span>
+            <p>Lingkungan Islami yang kondusif untuk belajar</p>
+          </div>
+        </div>
+        <div class="about-float">
+          <div class="num">2009</div>
+          <div class="txt">Tahun Berdiri</div>
+        </div>
+      </div>
+      <div class="about-right reveal">
+        <div class="section-label">Tentang Kami</div>
+        <h2 class="section-title">Membangun Generasi Qur'ani yang Berdakwah</h2>
+        <p class="section-desc">Pondok Pesantren Tahfidz & Dakwah Abu Hurairah Ra. (Ponpes ARA) adalah lembaga pendidikan Islam terpadu yang berfokus pada penghafalan Al-Qur'an dan pembinaan dai yang tangguh, berwawasan luas, dan berkarakter mulia.</p>
+
+        <div class="visi-misi">
+          <div class="vm-item">
+            <div class="vm-icon">🎯</div>
+            <div class="vm-text">
+              <h4>Visi</h4>
+              <p>Menjadi lembaga pesantren terdepan dalam mencetak hafidz Qur'an yang berdakwah dengan manhaj yang benar dan akhlak yang mulia.</p>
+            </div>
+          </div>
+          <div class="vm-item">
+            <div class="vm-icon">📋</div>
+            <div class="vm-text">
+              <h4>Misi</h4>
+              <p>Menyelenggarakan pendidikan Al-Qur'an berkualitas, membina karakter Islami, dan membekali santri dengan kemampuan dakwah kontemporer.</p>
+            </div>
+          </div>
+          <div class="vm-item">
+            <div class="vm-icon">⭐</div>
+            <div class="vm-text">
+              <h4>Nilai Utama</h4>
+              <p>Ikhlas, Amanah, Ta'awun — tiga pilar yang menopang setiap aktivitas di lingkungan Ponpes ARA.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAM -->
+<section id="program">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Program Unggulan</div>
+      <h2 class="section-title">Program Pendidikan Kami</h2>
+      <p class="section-desc">Beragam program yang dirancang untuk membentuk santri yang unggul secara spiritual, intelektual, dan sosial.</p>
+    </div>
+    <div class="program-grid">
+      <div class="program-card reveal">
+        <div class="program-icon">📖</div>
+        <h3>Tahfidz Al-Qur'an</h3>
+        <p>Program hafalan 30 juz dengan metode modern dan bimbingan ustadz berpengalaman. Target hafal dalam 3 tahun dengan sanad yang jelas.</p>
+        <div class="program-tags">
+          <span class="tag">30 Juz</span>
+          <span class="tag">Sanad Bersambung</span>
+          <span class="tag">Muroja'ah Rutin</span>
+        </div>
+      </div>
+      <div class="program-card reveal">
+        <div class="program-icon">🎤</div>
+        <h3>Dakwah & Khitabah</h3>
+        <p>Pelatihan dakwah intensif meliputi public speaking, penulisan, dan metodologi dakwah kontemporer di berbagai platform.</p>
+        <div class="program-tags">
+          <span class="tag">Public Speaking</span>
+          <span class="tag">Media Sosial</span>
+          <span class="tag">Dakwah Digital</span>
+        </div>
+      </div>
+      <div class="program-card reveal">
+        <div class="program-icon">📚</div>
+        <h3>Dirasah Islamiyah</h3>
+        <p>Kajian ilmu-ilmu Islam komprehensif: Fiqh, Aqidah, Hadits, Tafsir, dan Bahasa Arab dengan kurikulum terstruktur.</p>
+        <div class="program-tags">
+          <span class="tag">Fiqh</span>
+          <span class="tag">Tafsir</span>
+          <span class="tag">Bahasa Arab</span>
+        </div>
+      </div>
+      <div class="program-card reveal">
+        <div class="program-icon">💻</div>
+        <h3>Teknologi & Sains</h3>
+        <p>Pembekalan ilmu pengetahuan umum dan teknologi agar santri siap menghadapi tantangan zaman tanpa meninggalkan nilai Islam.</p>
+        <div class="program-tags">
+          <span class="tag">IT</span>
+          <span class="tag">Sains</span>
+          <span class="tag">Matematika</span>
+        </div>
+      </div>
+      <div class="program-card reveal">
+        <div class="program-icon">🌙</div>
+        <h3>Pembinaan Karakter</h3>
+        <p>Program pembinaan akhlak dan karakter melalui riyadhah ruhiyah, halaqah, dan kegiatan sosial kemasyarakatan.</p>
+        <div class="program-tags">
+          <span class="tag">Halaqah</span>
+          <span class="tag">Riyadhah</span>
+          <span class="tag">Sosial</span>
+        </div>
+      </div>
+      <div class="program-card reveal">
+        <div class="program-icon">🏆</div>
+        <h3>Ekstrakurikuler</h3>
+        <p>Berbagai kegiatan pengembangan diri: seni kaligrafi, olahraga, pramuka, hadrah, dan lomba-lomba Qur'ani tingkat nasional.</p>
+        <div class="program-tags">
+          <span class="tag">Kaligrafi</span>
+          <span class="tag">Olahraga</span>
+          <span class="tag">Hadrah</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERI -->
+<section id="galeri">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Dokumentasi</div>
+      <h2 class="section-title">Galeri Kegiatan Santri</h2>
+      <p class="section-desc">Momen-momen berharga dari berbagai kegiatan dan aktivitas santri Ponpes ARA.</p>
+    </div>
+    <div class="galeri-filter reveal">
+      <button class="filter-btn active" onclick="filterGaleri('semua', this)">Semua</button>
+      <button class="filter-btn" onclick="filterGaleri('foto', this)">📸 Foto</button>
+      <button class="filter-btn" onclick="filterGaleri('video', this)">🎬 Video</button>
+      <button class="filter-btn" onclick="filterGaleri('kegiatan', this)">🎯 Kegiatan</button>
+      <button class="filter-btn" onclick="filterGaleri('prestasi', this)">🏆 Prestasi</button>
+    </div>
+    <div class="galeri-grid reveal">
+      <div class="galeri-item span2 tall gi1" data-cat="kegiatan">
+        <div class="galeri-thumb">
+          <div class="galeri-bg"></div>
+          <span class="galeri-icon">🕌</span>
+          <div class="galeri-type">📸 Foto</div>
+          <div class="galeri-overlay"><p>Kegiatan Sholat Berjamaah</p></div>
+        </div>
+      </div>
+      <div class="galeri-item gi2" data-cat="foto">
+        <div class="galeri-thumb">
+          <div class="galeri-bg"></div>
+          <span class="galeri-icon">📖</span>
+          <div class="galeri-type">📸 Foto</div>
+          <div class="galeri-overlay"><p>Halaqah Tahfidz</p></div>
+        </div>
+      </div>
+      <div class="galeri-item gi3" data-cat="video">
+        <div class="galeri-thumb">
+          <div class="galeri-bg"></div>
+          <span class="galeri-icon">▶️</span>
+          <div class="galeri-type">🎬 Video</div>
+          <div class="galeri-overlay"><p>Muhafadzah Al-Qur'an</p></div>
+        </div>
+      </div>
+      <div class="galeri-item span2 gi4" data-cat="prestasi">
+        <div class="galeri-thumb">
+          <div class="galeri-bg"></div>
+          <span class="galeri-icon">🏆</span>
+          <div class="galeri-type">📸 Foto</div>
+          <div class="galeri-overlay"><p>Juara MTQ Tingkat Provinsi 2024</p></div>
+        </div>
+      </div>
+      <div class="galeri-item gi5" data-cat="kegiatan">
+        <div class="galeri-thumb">
+          <div class="galeri-bg"></div>
+          <span class="galeri-icon">🎤</span>
+          <div class="galeri-type">🎬 Video</div>
+          <div class="galeri-overlay"><p>Pelatihan Dakwah</p></div>
+        </div>
+      </div>
+      <div class="galeri-item gi6" data-cat="foto">
+        <div class="galeri-thumb">
+          <div class="galeri-bg"></div>
+          <span class="galeri-icon">🌙</span>
+          <div class="galeri-type">📸 Foto</div>
+          <div class="galeri-overlay"><p>Sholat Malam Berjama'ah</p></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:40px">
+      <a href="#upload" class="btn-primary">Lihat Semua →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ARTIKEL -->
+<section id="artikel">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:20px">
+      <div class="reveal">
+        <div class="section-label">Blog & Berita</div>
+        <h2 class="section-title">Artikel & Informasi</h2>
+      </div>
+      <a href="#" class="btn-primary reveal" style="font-size:13px; padding:12px 24px;">Semua Artikel →</a>
+    </div>
+    <div class="artikel-grid">
+      <div class="artikel-card featured a1 reveal">
+        <div class="artikel-img">📖</div>
+        <div class="artikel-body">
+          <div class="artikel-meta">
+            <span class="artikel-cat">Tahfidz</span>
+            <span class="artikel-date">24 April 2025</span>
+          </div>
+          <h3>Metode Talaqi: Cara Efektif Menghafal Al-Qur'an dengan Sanad yang Bersambung kepada Rasulullah ﷺ</h3>
+          <p>Metode talaqi telah terbukti selama berabad-abad sebagai cara terbaik untuk menjaga kemurnian bacaan Al-Qur'an. Di Ponpes ARA, kami menerapkan metode ini dengan bimbingan para ustadz bersanad...</p>
+          <div class="read-progress"><div class="read-progress-fill" data-width="78%"></div></div>
+          <div class="artikel-stats">
+            <div class="astat"><span class="aicon">👁️</span><span class="astat-views" data-count="3241">0</span>&nbsp;dibaca</div>
+            <div class="astat"><span class="aicon">❤️</span> 218 suka</div>
+            <div class="astat"><span class="aicon">💬</span> 34 komentar</div>
+            <div class="astat"><span class="aicon">🔗</span> 91 dibagikan</div>
+            <span class="astat-hot">🔥 Trending</span>
+          </div>
+          <a href="#" class="read-more">Baca Selengkapnya →</a>
+        </div>
+      </div>
+      <div class="artikel-card a2 reveal">
+        <div class="artikel-img">🎤</div>
+        <div class="artikel-body">
+          <div class="artikel-meta">
+            <span class="artikel-cat">Dakwah</span>
+            <span class="artikel-date">20 April 2025</span>
+          </div>
+          <h3>Dakwah di Era Digital: Tantangan dan Peluang bagi Generasi Muda</h3>
+          <p>Media sosial membuka peluang besar untuk menyebarkan kebaikan. Para santri ARA dilatih...</p>
+          <div class="artikel-stats">
+            <div class="astat"><span class="aicon">👁️</span><span class="astat-views" data-count="1872">0</span>&nbsp;dibaca</div>
+            <div class="astat"><span class="aicon">❤️</span> 143 suka</div>
+          </div>
+          <a href="#" class="read-more">Baca →</a>
+        </div>
+      </div>
+      <div class="artikel-card a3 reveal">
+        <div class="artikel-img">🏆</div>
+        <div class="artikel-body">
+          <div class="artikel-meta">
+            <span class="artikel-cat">Prestasi</span>
+            <span class="artikel-date">15 April 2025</span>
+          </div>
+          <h3>Santri ARA Raih Juara I MTQ Tingkat Provinsi 2025</h3>
+          <p>Alhamdulillah, Ahmad Zaki Mubarak berhasil meraih juara pertama dalam cabang Tahfidz 30 Juz...</p>
+          <div class="artikel-stats">
+            <div class="astat"><span class="aicon">👁️</span><span class="astat-views" data-count="4108">0</span>&nbsp;dibaca</div>
+            <div class="astat"><span class="aicon">❤️</span> 392 suka</div>
+            <span class="astat-hot">🔥 Viral</span>
+          </div>
+          <a href="#" class="read-more">Baca →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KEGIATAN / JADWAL -->
+<section id="kegiatan">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Agenda & Jadwal</div>
+      <h2 class="section-title">Kegiatan Harian Santri</h2>
+      <p class="section-desc">Jadwal terstruktur yang menyeimbangkan ibadah, akademik, dan pengembangan diri santri.</p>
+    </div>
+    <div class="jadwal-grid">
+      <div class="jadwal-card reveal">
+        <div class="jadwal-header">
+          <h3>🌙 Malam & Subuh</h3>
+          <p>Dimulai dari ketenangan malam</p>
+        </div>
+        <div class="jadwal-list">
+          <div class="jadwal-item">
+            <div class="jadwal-time">03:00</div>
+            <div class="jadwal-info">
+              <h4>Qiyamul Lail</h4>
+              <p>Sholat malam berjamaah</p>
+            </div>
+            <div class="jadwal-dot"></div>
+          </div>
+          <div class="jadwal-item">
+            <div class="jadwal-time">04:30</div>
+            <div class="jadwal-info">
+              <h4>Sholat Subuh Berjamaah</h4>
+              <p>Dilanjutkan wirid pagi</p>
+            </div>
+            <div class="jadwal-dot"></div>
+          </div>
+          <div class="jadwal-item">
+            <div class="jadwal-time">05:00</div>
+            <div class="jadwal-info">
+              <h4>Halaqah Tahfidz Pagi</h4>
+              <p>Setoran hafalan harian</p>
+            </div>
+            <div class="jadwal-dot"></div>
+          </div>
+          <div class="jadwal-item">
+            <div class="jadwal-time">06:30</div>
+            <div class="jadwal-info">
+              <h4>Persiapan & Sarapan</h4>
+              <p>Makan pagi bersama</p>
+            </div>
+            <div class="jadwal-dot"></div>
+          </div>
+        </div>
+      </div>
+      <div class="jadwal-card reveal">
+        <div class="jadwal-header">
+          <h3>☀️ Siang & Malam</h3>
+          <p>Produktif sepanjang hari</p>
+        </div>
+        <div class="jadwal-list">
+          <div class="jadwal-item">
+            <div class="jadwal-time">07:30</div>
+            <div class="jadwal-info">
+              <h4>Kelas Formal</h4>
+              <p>Dirasah & mata pelajaran umum</p>
+            </div>
+            <div class="jadwal-dot"></div>
+          </div>
+          <div class="jadwal-item">
+            <div class="jadwal-time">12:00</div>
+            <div class="jadwal-info">
+              <h4>Sholat Dzuhur & Istirahat</h4>
+              <p>Makan siang bersama</p>
+            </div>
+            <div class="jadwal-dot"></div>
+          </div>
+          <div class="jadwal-item">
+            <div class="jadwal-time">15:30</div>
+            <div class="jadwal-info">
+              <h4>Tahfidz & Muroja'ah Sore</h4>
+              <p>Mengulang hafalan</p>
+            </div>
+            <div class="jadwal-dot"></div>
+          </div>
+          <div class="jadwal-item">
+            <div class="jadwal-time">19:30</div>
+            <div class="jadwal-info">
+              <h4>Kajian Malam</h4>
+              <p>Dirasah kitab kuning</p>
+            </div>
+            <div class="jadwal-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PENGUMUMAN -->
+<section id="pengumuman">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:20px">
+      <div class="reveal">
+        <div class="section-label">Info & Pengumuman</div>
+        <h2 class="section-title">Pengumuman Terkini</h2>
+      </div>
+    </div>
+    <div class="pengumuman-wrap">
+      <div class="pengumuman-list reveal">
+        <div class="pengumuman-item">
+          <div class="pengumuman-date">
+            <div class="day">28</div>
+            <div class="month">Apr</div>
+          </div>
+          <div class="pengumuman-content">
+            <h4>Penerimaan Santri Baru Tahun Ajaran 2025/2026 Resmi Dibuka</h4>
+            <p>Pondok Pesantren Abu Hurairah Ra. membuka pendaftaran santri baru untuk tahun ajaran 2025/2026. Pendaftaran dibuka mulai 1 Mei s.d. 30 Juni 2025.</p>
+            <span class="pengumuman-badge badge-penting">🔴 Penting</span>
+          </div>
+        </div>
+        <div class="pengumuman-item">
+          <div class="pengumuman-date">
+            <div class="day">20</div>
+            <div class="month">Apr</div>
+          </div>
+          <div class="pengumuman-content">
+            <h4>Wisuda Hafidz Angkatan XVIII — Ahad, 4 Mei 2025</h4>
+            <p>Pelaksanaan wisuda hafidz angkatan XVIII akan dilaksanakan pada Ahad, 4 Mei 2025 bertempat di aula pesantren. Wali santri diundang hadir.</p>
+            <span class="pengumuman-badge badge-info">🔵 Agenda</span>
+          </div>
+        </div>
+        <div class="pengumuman-item">
+          <div class="pengumuman-date">
+            <div class="day">15</div>
+            <div class="month">Apr</div>
+          </div>
+          <div class="pengumuman-content">
+            <h4>Ujian Semester Genap 1446 H — Jadwal & Ketentuan</h4>
+            <p>Ujian akhir semester genap akan dilaksanakan mulai 10–20 Mei 2025. Santri wajib menyelesaikan seluruh setoran hafalan sebelum ujian dimulai.</p>
+            <span class="pengumuman-badge badge-umum">🟡 Akademik</span>
+          </div>
+        </div>
+        <div class="pengumuman-item">
+          <div class="pengumuman-date">
+            <div class="day">08</div>
+            <div class="month">Apr</div>
+          </div>
+          <div class="pengumuman-content">
+            <h4>Jadwal Kunjungan Orang Tua / Wali Santri Bulan Mei</h4>
+            <p>Kunjungan orang tua/wali santri dijadwalkan setiap Ahad pertama dan ketiga setiap bulan. Mohon konfirmasi kehadiran melalui admin pesantren.</p>
+            <span class="pengumuman-badge badge-info">🔵 Info</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="donasi-box">
+          <h3>💝 Infaq & Donasi Pesantren</h3>
+          <p>Bantu kami membangun generasi Qur'ani yang lebih baik. Setiap infaq Anda adalah amal jariyah yang terus mengalir.</p>
+          <div class="donasi-progress"><div class="donasi-bar"></div></div>
+          <div class="donasi-nums">
+            <span>Terkumpul</span>
+            <strong>Rp 680 Juta / Rp 1 M</strong>
+          </div>
+          <a href="#kontak" class="btn-primary" style="width:100%; text-align:center; display:block;">Donasi Sekarang</a>
+
+          <div style="margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1)">
+            <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:8px;">Rekening Donasi:</p>
+            <p style="font-size:14px; color:rgba(255,255,255,0.8); font-weight:600;">Bank Syariah Indonesia (BSI)</p>
+            <p style="font-size:18px; color:var(--gold-light); font-family:'Playfair Display',serif; font-weight:700;">7012 3456 78</p>
+            <p style="font-size:12px; color:rgba(255,255,255,0.5);">a.n. Ponpes Abu Hurairah Ra.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATISTIK DASHBOARD -->
+<section id="statistik">
+  <div class="stats-dashboard">
+    <div class="stats-top" style="max-width:1200px;margin:0 auto 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+      <div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:white;font-weight:700;">📊 Statistik Website</h2>
+        <p style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:4px;">Data pengunjung & keterbacaan konten real-time Ponpes ARA</p>
+      </div>
+      <div class="live-badge"><div class="live-dot"></div><span>LIVE UPDATE</span></div>
+    </div>
+    <div class="stats-main-grid">
+      <div class="stat-big-card reveal">
+        <div class="top-row"><div class="icon-wrap icon-green">👁️</div><div class="stat-change change-up">↑ 12.4%</div></div>
+        <div class="big-num" data-count="24819" data-suffix="">0</div>
+        <div class="big-label">Total Pengunjung Bulan Ini</div>
+        <div class="mini-chart">
+          <div class="mini-bar" style="height:40%"></div><div class="mini-bar" style="height:55%"></div>
+          <div class="mini-bar" style="height:45%"></div><div class="mini-bar" style="height:70%"></div>
+          <div class="mini-bar" style="height:60%"></div><div class="mini-bar" style="height:80%"></div>
+          <div class="mini-bar active" style="height:100%"></div>
+        </div>
+      </div>
+      <div class="stat-big-card reveal">
+        <div class="top-row"><div class="icon-wrap icon-blue">📖</div><div class="stat-change change-up">↑ 8.7%</div></div>
+        <div class="big-num" data-count="9342" data-suffix="">0</div>
+        <div class="big-label">Total Pembaca Artikel</div>
+        <div class="mini-chart">
+          <div class="mini-bar" style="height:50%"></div><div class="mini-bar" style="height:65%"></div>
+          <div class="mini-bar" style="height:55%"></div><div class="mini-bar" style="height:75%"></div>
+          <div class="mini-bar" style="height:68%"></div><div class="mini-bar" style="height:90%"></div>
+          <div class="mini-bar active" style="height:85%"></div>
+        </div>
+      </div>
+      <div class="stat-big-card reveal">
+        <div class="top-row"><div class="icon-wrap icon-gold">🟢</div><div class="stat-change change-up">↑ Aktif</div></div>
+        <div class="big-num" data-count="137" data-suffix="" id="liveVisitor">0</div>
+        <div class="big-label">Pengunjung Online Sekarang</div>
+        <div class="mini-chart">
+          <div class="mini-bar" style="height:30%"></div><div class="mini-bar" style="height:70%"></div>
+          <div class="mini-bar" style="height:45%"></div><div class="mini-bar" style="height:90%"></div>
+          <div class="mini-bar" style="height:60%"></div><div class="mini-bar" style="height:75%"></div>
+          <div class="mini-bar active" style="height:88%"></div>
+        </div>
+      </div>
+      <div class="stat-big-card reveal">
+        <div class="top-row"><div class="icon-wrap icon-purple">⏱️</div><div class="stat-change change-up">↑ 5.2%</div></div>
+        <div class="big-num" data-count="3" data-suffix=":42">0</div>
+        <div class="big-label">Rata-rata Waktu Baca (menit)</div>
+        <div class="mini-chart">
+          <div class="mini-bar" style="height:60%"></div><div class="mini-bar" style="height:50%"></div>
+          <div class="mini-bar" style="height:75%"></div><div class="mini-bar" style="height:65%"></div>
+          <div class="mini-bar" style="height:80%"></div><div class="mini-bar" style="height:70%"></div>
+          <div class="mini-bar active" style="height:95%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="stats-bottom-grid">
+      <div class="stat-wide-card reveal">
+        <h4>Sumber Trafik Pengunjung</h4>
+        <div class="traffic-list">
+          <div class="traffic-item"><div class="traffic-source">Google Search</div><div class="traffic-bar-wrap"><div class="traffic-bar-fill tb-green" style="width:0%" data-width="72%"></div></div><div class="traffic-pct">72%</div></div>
+          <div class="traffic-item"><div class="traffic-source">WhatsApp</div><div class="traffic-bar-wrap"><div class="traffic-bar-fill tb-blue" style="width:0%" data-width="58%"></div></div><div class="traffic-pct">58%</div></div>
+          <div class="traffic-item"><div class="traffic-source">Instagram</div><div class="traffic-bar-wrap"><div class="traffic-bar-fill tb-gold" style="width:0%" data-width="44%"></div></div><div class="traffic-pct">44%</div></div>
+          <div class="traffic-item"><div class="traffic-source">YouTube</div><div class="traffic-bar-wrap"><div class="traffic-bar-fill tb-purple" style="width:0%" data-width="31%"></div></div><div class="traffic-pct">31%</div></div>
+          <div class="traffic-item"><div class="traffic-source">Langsung</div><div class="traffic-bar-wrap"><div class="traffic-bar-fill tb-orange" style="width:0%" data-width="19%"></div></div><div class="traffic-pct">19%</div></div>
+        </div>
+      </div>
+      <div class="stat-donut-card reveal">
+        <h4>Perangkat Pengunjung</h4>
+        <div class="donut-wrap">
+          <svg class="donut-svg" width="110" height="110" viewBox="0 0 110 110">
+            <circle class="donut-track" cx="55" cy="55" r="45"/>
+            <circle class="donut-fill" cx="55" cy="55" r="45" stroke="#4ADE80" stroke-dasharray="170 113" stroke-dashoffset="0"/>
+            <circle class="donut-fill" cx="55" cy="55" r="45" stroke="#60A5FA" stroke-dasharray="68 215" stroke-dashoffset="-170"/>
+            <circle class="donut-fill" cx="55" cy="55" r="45" stroke="#C9A84C" stroke-dasharray="45 238" stroke-dashoffset="-238"/>
+          </svg>
+          <div class="donut-center"><div class="pct">100%</div><div class="lbl">Total</div></div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#4ADE80"></div><span>HP / Mobile</span><strong>60%</strong></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#60A5FA"></div><span>Desktop</span><strong>24%</strong></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#C9A84C"></div><span>Tablet</span><strong>16%</strong></div>
+        </div>
+      </div>
+      <div class="stat-donut-card reveal">
+        <h4>Halaman Terpopuler</h4>
+        <div class="donut-wrap">
+          <svg class="donut-svg" width="110" height="110" viewBox="0 0 110 110">
+            <circle class="donut-track" cx="55" cy="55" r="45"/>
+            <circle class="donut-fill" cx="55" cy="55" r="45" stroke="#A78BFA" stroke-dasharray="141 142" stroke-dashoffset="0"/>
+            <circle class="donut-fill" cx="55" cy="55" r="45" stroke="#FB923C" stroke-dasharray="85 198" stroke-dashoffset="-141"/>
+            <circle class="donut-fill" cx="55" cy="55" r="45" stroke="#C9A84C" stroke-dasharray="57 226" stroke-dashoffset="-226"/>
+          </svg>
+          <div class="donut-center"><div class="pct" style="font-size:16px">Top</div><div class="lbl">Halaman</div></div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#A78BFA"></div><span>Artikel</span><strong>45%</strong></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#FB923C"></div><span>Program</span><strong>27%</strong></div>
+          <div class="legend-item"><div class="legend-dot" style="background:#C9A84C"></div><span>Galeri</span><strong>18%</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UPLOAD / MEDIA -->
+<section id="upload">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Media Santri</div>
+      <h2 class="section-title">Upload & Bagikan Konten</h2>
+      <p class="section-desc">Portal upload untuk mendokumentasikan berbagai kegiatan dan pencapaian santri Ponpes ARA.</p>
+    </div>
+    <div class="upload-grid">
+      <div class="upload-card reveal" onclick="showUploadInfo('Foto')">
+        <div class="upload-icon">📸</div>
+        <h3>Upload Foto</h3>
+        <p>Dokumentasikan momen berharga kegiatan santri dalam bentuk foto berkualitas tinggi.</p>
+        <div class="upload-types">
+          <span class="upload-type">JPG</span>
+          <span class="upload-type">PNG</span>
+          <span class="upload-type">WEBP</span>
+        </div>
+        <a href="#" class="btn-primary" style="margin-top:20px; display:inline-block; font-size:13px; padding:10px 24px;">Pilih Foto</a>
+      </div>
+      <div class="upload-card reveal" onclick="showUploadInfo('Video')">
+        <div class="upload-icon">🎬</div>
+        <h3>Upload Video</h3>
+        <p>Abadikan kegiatan, ceramah, dan prestasi santri dalam format video yang dapat dibagikan.</p>
+        <div class="upload-types">
+          <span class="upload-type">MP4</span>
+          <span class="upload-type">MOV</span>
+          <span class="upload-type">AVI</span>
+        </div>
+        <a href="#" class="btn-primary" style="margin-top:20px; display:inline-block; font-size:13px; padding:10px 24px;">Pilih Video</a>
+      </div>
+      <div class="upload-card reveal" onclick="showUploadInfo('Dokumen')">
+        <div class="upload-icon">📄</div>
+        <h3>Upload Dokumen</h3>
+        <p>Unggah materi, laporan kegiatan, sertifikat, dan dokumen penting lainnya.</p>
+        <div class="upload-types">
+          <span class="upload-type">PDF</span>
+          <span class="upload-type">DOC</span>
+          <span class="upload-type">PPT</span>
+        </div>
+        <a href="#" class="btn-primary" style="margin-top:20px; display:inline-block; font-size:13px; padding:10px 24px;">Pilih Dokumen</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFIL -->
+<section id="profil">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Pimpinan</div>
+      <h2 class="section-title">Profil Pimpinan Pesantren</h2>
+    </div>
+    <div class="profil-grid">
+      <div class="reveal">
+        <div class="profil-card">
+          <div class="profil-img">👳</div>
+          <div class="profil-info">
+            <h3>KH. Abdullah Fauzi, Lc., M.A.</h3>
+            <div class="role">Pengasuh Pesantren</div>
+            <p>Lulusan Universitas Islam Madinah, hafidz 30 juz, dan aktif berdakwah sejak 1998.</p>
+          </div>
+        </div>
+      </div>
+      <div class="profil-detail reveal">
+        <h3>Biografi Singkat</h3>
+        <p class="bio">KH. Abdullah Fauzi lahir di Jawa Tengah dan menempuh pendidikan agama sejak usia dini. Beliau menyelesaikan hafalan Al-Qur'an 30 juz pada usia 16 tahun dan melanjutkan studi ke Universitas Islam Madinah, Arab Saudi, mengambil Jurusan Syariah dan Dirasah Islamiyah.<br><br>
+        Sekembalinya ke Indonesia pada tahun 2009, beliau mendirikan Pondok Pesantren Tahfidz & Dakwah Abu Hurairah Ra. dengan visi mencetak generasi Qur'ani yang siap berdakwah di era modern. Di bawah kepemimpinannya, pesantren telah meluluskan ratusan hafidz yang tersebar di seluruh Indonesia.</p>
+        <div class="profil-pencapaian">
+          <div class="pencapaian-item">
+            <div class="num">18</div>
+            <p>Angkatan Wisuda</p>
+          </div>
+          <div class="pencapaian-item">
+            <div class="num">300+</div>
+            <p>Hafidz Diluluskan</p>
+          </div>
+          <div class="pencapaian-item">
+            <div class="num">15+</div>
+            <p>Penghargaan</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAK -->
+<section id="kontak">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Hubungi Kami</div>
+      <h2 class="section-title">Kontak & Pendaftaran</h2>
+    </div>
+    <div class="kontak-grid">
+      <div class="kontak-info reveal">
+        <div class="kontak-item">
+          <div class="kontak-icon">📍</div>
+          <div class="kontak-text">
+            <h4>Alamat</h4>
+            <p>Jl. Abu Hurairah No. 1, Pondok Pesantren ARA<br>Kabupaten Bogor, Jawa Barat 16810</p>
+          </div>
+        </div>
+        <div class="kontak-item">
+          <div class="kontak-icon">📞</div>
+          <div class="kontak-text">
+            <h4>Telepon / WhatsApp</h4>
+            <p>+62 812 3456 7890<br>+62 813 9876 5432</p>
+          </div>
+        </div>
+        <div class="kontak-item">
+          <div class="kontak-icon">📧</div>
+          <div class="kontak-text">
+            <h4>Email</h4>
+            <p>info@ponpes-ara.ac.id<br>pendaftaran@ponpes-ara.ac.id</p>
+          </div>
+        </div>
+        <div class="kontak-item">
+          <div class="kontak-icon">⏰</div>
+          <div class="kontak-text">
+            <h4>Jam Layanan</h4>
+            <p>Senin – Sabtu: 08.00 – 17.00 WIB<br>Ahad: 09.00 – 12.00 WIB</p>
+          </div>
+        </div>
+
+        <div class="sosmed">
+          <a href="#" class="sosmed-btn" title="Instagram">📸</a>
+          <a href="#" class="sosmed-btn" title="YouTube">▶️</a>
+          <a href="#" class="sosmed-btn" title="WhatsApp">💬</a>
+          <a href="#" class="sosmed-btn" title="Facebook">📘</a>
+          <a href="#" class="sosmed-btn" title="Telegram">✈️</a>
+        </div>
+      </div>
+
+      <div class="kontak-form reveal">
+        <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:36px;">
+          <h3 style="font-family:'Playfair Display',serif; font-size:22px; color:white; margin-bottom:24px;">Formulir Pendaftaran</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nama Lengkap</label>
+              <input type="text" placeholder="Nama calon santri">
+            </div>
+            <div class="form-group">
+              <label>Tempat, Tgl Lahir</label>
+              <input type="text" placeholder="Kota, DD/MM/YYYY">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>No. WhatsApp Orang Tua</label>
+              <input type="text" placeholder="+62 8xx xxxx xxxx">
+            </div>
+            <div class="form-group">
+              <label>Asal Sekolah</label>
+              <input type="text" placeholder="SD/SMP/MTs...">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Program yang Diminati</label>
+            <select>
+              <option>Tahfidz Al-Qur'an (Full)</option>
+              <option>Tahfidz + Dirasah Islamiyah</option>
+              <option>Tahfidz + Formal (SMP/SMA)</option>
+              <option>Dakwah & Khitabah</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Pesan / Pertanyaan</label>
+            <textarea placeholder="Tuliskan pesan atau pertanyaan Anda..."></textarea>
+          </div>
+          <button class="btn-primary" style="width:100%; padding:16px; font-size:15px;" onclick="submitForm()">Kirim Pendaftaran ✉️</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="badge">أبو</div>
+        <div class="brand-name">Ponpes ARA</div>
+      </div>
+      <p>Pondok Pesantren Tahfidz & Dakwah Abu Hurairah Ra. — Mencetak generasi Qur'ani yang siap berdakwah di era modern.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigasi</h4>
+      <a href="#tentang">Tentang Kami</a>
+      <a href="#program">Program</a>
+      <a href="#galeri">Galeri</a>
+      <a href="#artikel">Artikel</a>
+      <a href="#profil">Profil Pimpinan</a>
+    </div>
+    <div class="footer-col">
+      <h4>Informasi</h4>
+      <a href="#kegiatan">Jadwal Kegiatan</a>
+      <a href="#pengumuman">Pengumuman</a>
+      <a href="#upload">Upload Media</a>
+      <a href="#kontak">Pendaftaran</a>
+      <a href="#">Download Brosur</a>
+    </div>
+    <div class="footer-col">
+      <h4>Program</h4>
+      <a href="#">Tahfidz 30 Juz</a>
+      <a href="#">Dirasah Islamiyah</a>
+      <a href="#">Dakwah & Khitabah</a>
+      <a href="#">Formal (SMP/SMA)</a>
+      <a href="#">Ekstrakurikuler</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Pondok Pesantren Tahfidz & Dakwah Abu Hurairah Ra. — All Rights Reserved</p>
+    <span class="ara-badge">بَارَكَ اللَّهُ فِيكُمْ</span>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Back to top
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('backTop');
+    btn.classList.toggle('show', window.scrollY > 400);
+  });
+
+  // Animated counter
+  function animateCount(el) {
+    const target = parseInt(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1800;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = Math.floor(current).toLocaleString('id-ID') + suffix;
+    }, 16);
+  }
+
+  // Animate traffic bars and counters when in view
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Counters
+        entry.target.querySelectorAll('[data-count]').forEach(el => animateCount(el));
+        // Traffic bars
+        entry.target.querySelectorAll('[data-width]').forEach(el => {
+          setTimeout(() => { el.style.width = el.dataset.width; }, 300);
+        });
+        // Read progress bars
+        entry.target.querySelectorAll('.read-progress-fill').forEach(el => {
+          setTimeout(() => { el.style.width = el.dataset.width; }, 500);
+        });
+        statObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.stats-dashboard, #artikel').forEach(el => statObserver.observe(el));
+
+  // Live visitor count flicker
+  setInterval(() => {
+    const el = document.getElementById('liveVisitor');
+    if (el) el.textContent = (137 + Math.floor(Math.random()*10) - 4).toLocaleString('id-ID');
+  }, 3000);
+
+  // Artikel view counters animate on scroll
+  const artikelObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.astat-views[data-count]').forEach(el => animateCount(el));
+        artikelObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.artikel-card').forEach(el => artikelObs.observe(el));
+
+
+  function filterGaleri(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.galeri-item').forEach(item => {
+      if (cat === 'semua' || item.dataset.cat === cat) {
+        item.style.opacity = '1'; item.style.transform = '';
+      } else {
+        item.style.opacity = '0.3'; item.style.transform = 'scale(0.95)';
+      }
+    });
+  }
+
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // Upload info
+  function showUploadInfo(type) {
+    alert('Fitur upload ' + type + ' akan segera tersedia. Silakan hubungi admin pesantren untuk upload konten.');
+  }
+
+  // Form submit
+  function submitForm() {
+    alert('Terima kasih! Formulir pendaftaran Anda telah diterima. Tim kami akan menghubungi Anda segera. Jazakumullahu khairan. 🌙');
+  }
+
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    nav.style.boxShadow = window.scrollY > 50 ? '0 4px 30px rgba(0,0,0,0.3)' : 'none';
+  });
+
+  // ── ISLAMIC WIDGET ──
+  const hariID = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const bulanID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const bulanHijri = ['Muharram','Shafar','Rabi\'ul Awwal','Rabi\'ul Akhir','Jumadil Awwal','Jumadil Akhir','Rajab','Sya\'ban','Ramadhan','Syawwal','Dzulqa\'dah','Dzulhijjah'];
+  const bulanHijriArab = ['مُحَرَّم','صَفَر','رَبِيعُ الأَوَّل','رَبِيعُ الآخِر','جُمَادَى الأُولَى','جُمَادَى الآخِرَة','رَجَب','شَعْبَان','رَمَضَان','شَوَّال','ذُو القَعْدَة','ذُو الحِجَّة'];
+
+  // Gregorian → Hijri (algoritma akurat + koreksi offset rukyah)
+  function toHijri(date) {
+    const D = date.getDate();
+    const M = date.getMonth() + 1;
+    const Y = date.getFullYear();
+
+    const JD = Math.floor((1461 * (Y + 4800 + Math.floor((M - 14) / 12))) / 4)
+             + Math.floor((367 * (M - 2 - 12 * Math.floor((M - 14) / 12))) / 12)
+             - Math.floor((3 * Math.floor((Y + 4900 + Math.floor((M - 14) / 12)) / 100)) / 4)
+             + D - 32075;
+
+    let l = JD - 1948440 + 10632;
+    let n = Math.floor((l - 1) / 10631);
+    l = l - 10631 * n + 354;
+    let j = Math.floor((10985 - l) / 5316) * Math.floor(50 * l / 17719)
+          + Math.floor(l / 5670) * Math.floor(43 * l / 15238);
+    l = l - Math.floor((30 - j) / 15) * Math.floor(17719 * j / 50)
+          - Math.floor(j / 16) * Math.floor(15238 * j / 43) + 29;
+    const hMonth = Math.floor(24 * l / 709);
+    const hDay   = l - Math.floor(709 * hMonth / 24);
+    const hYear  = 30 * n + j - 30;
+
+    // Koreksi -3 hari agar sesuai rukyatul hilal (pemerintah Indonesia)
+    const correctedJD = JD - 3;
+    let l2 = correctedJD - 1948440 + 10632;
+    let n2 = Math.floor((l2 - 1) / 10631);
+    l2 = l2 - 10631 * n2 + 354;
+    let j2 = Math.floor((10985 - l2) / 5316) * Math.floor(50 * l2 / 17719)
+           + Math.floor(l2 / 5670) * Math.floor(43 * l2 / 15238);
+    l2 = l2 - Math.floor((30 - j2) / 15) * Math.floor(17719 * j2 / 50)
+           - Math.floor(j2 / 16) * Math.floor(15238 * j2 / 43) + 29;
+    const hMonth2 = Math.floor(24 * l2 / 709);
+    const hDay2   = l2 - Math.floor(709 * hMonth2 / 24);
+    const hYear2  = 30 * n2 + j2 - 30;
+
+    return { day: hDay2, month: hMonth2 - 1, year: hYear2 };
+  }
+
+  function toArabNum(n) {
+    return String(n).split('').map(d => '٠١٢٣٤٥٦٧٨٩'[+d]).join('');
+  }
+
+  // Waktu Shalat — Kab. Mempawah, Kalimantan Barat (Kemenag GMT+7)
+  const prayerTimes = [
+    { id: 'p-subuh',   name: 'Subuh',   h: 4,  m: 19 },
+    { id: 'p-dzuhur',  name: 'Dzuhur',  h: 11, m: 42 },
+    { id: 'p-ashar',   name: 'Ashar',   h: 15, m: 1  },
+    { id: 'p-maghrib', name: 'Maghrib', h: 17, m: 46 },
+    { id: 'p-isya',    name: 'Isya',    h: 18, m: 56 },
+  ];
+
+  function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    if(document.getElementById('clkH')) document.getElementById('clkH').textContent = h;
+    if(document.getElementById('clkM')) document.getElementById('clkM').textContent = m;
+    if(document.getElementById('clkS')) document.getElementById('clkS').textContent = s;
+
+    // Date Masehi
+    const hari = hariID[now.getDay()];
+    const tgl = now.getDate();
+    const bln = bulanID[now.getMonth()];
+    const thn = now.getFullYear();
+    if(document.getElementById('clkDate')) document.getElementById('clkDate').textContent = `${hari}, ${tgl} ${bln} ${thn}`;
+    if(document.getElementById('calMasehi')) document.getElementById('calMasehi').textContent = `${tgl} ${bln} ${thn}`;
+    if(document.getElementById('calHari')) document.getElementById('calHari').textContent = hari;
+
+    // Hijri
+    const hijri = toHijri(now);
+    const hDay = hijri.day, hMon = hijri.month, hYr = hijri.year;
+    if(document.getElementById('calHijriArab'))
+      document.getElementById('calHijriArab').textContent = `${toArabNum(hDay)} ${bulanHijriArab[hMon]} ${toArabNum(hYr)} هـ`;
+    if(document.getElementById('calHijriLatin'))
+      document.getElementById('calHijriLatin').textContent = `${hDay} ${bulanHijri[hMon]} ${hYr} H`;
+
+    // Prayer active/passed & countdown
+    const nowMins = now.getHours() * 60 + now.getMinutes();
+    let nextPrayer = null, nextMins = Infinity;
+    prayerTimes.forEach(p => {
+      const pMin = p.h * 60 + p.m;
+      const el = document.getElementById(p.id);
+      if (!el) return;
+      el.classList.remove('active','passed');
+      if (pMin <= nowMins) el.classList.add('passed');
+      if (pMin > nowMins && pMin < nextMins) { nextMins = pMin; nextPrayer = p; }
+    });
+
+    // Wrap around midnight → Subuh next day
+    if (!nextPrayer) { nextPrayer = prayerTimes[0]; nextMins = prayerTimes[0].h * 60 + prayerTimes[0].m + 1440; }
+
+    const activeEl = document.getElementById(nextPrayer.id);
+    if (activeEl) { activeEl.classList.remove('passed'); activeEl.classList.add('active'); }
+    if (document.getElementById('nextPrayerBadge'))
+      document.getElementById('nextPrayerBadge').textContent = `Berikutnya: ${nextPrayer.name}`;
+
+    // Countdown
+    let diff = (nextMins - nowMins) * 60 - now.getSeconds();
+    if (diff < 0) diff += 86400;
+    const ch = String(Math.floor(diff / 3600)).padStart(2,'0');
+    const cm = String(Math.floor((diff % 3600) / 60)).padStart(2,'0');
+    const cs = String(diff % 60).padStart(2,'0');
+    if(document.getElementById('prayerCountdown'))
+      document.getElementById('prayerCountdown').textContent = `${ch}:${cm}:${cs}`;
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+</body>
+</html>

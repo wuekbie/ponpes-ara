@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Ponpes ARA</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, orderBy, query, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ── CLOUDINARY CONFIG ──
+  const CLOUD_NAME   = 'djsioi5rc';
+  const UPLOAD_PRESET = 'ponpes_ara'; // akan dibuat di langkah berikut
+
+  // ── FIREBASE CONFIG — GANTI DENGAN MILIK ANDA ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyDsDNhli08gsbUgCYDrG6vrY4FP5-nYYc4",
+  authDomain: "ponpes-ara.firebaseapp.com",
+  projectId: "ponpes-ara",
+  storageBucket: "ponpes-ara.firebasestorage.app",
+  messagingSenderId: "1024138092376",
+  appId: "1:1024138092376:web:c5b7dcd1b42b99812a0f2d",
+  measurementId: "G-W09S5RVFPE"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // ── UPLOAD KE CLOUDINARY ──
+  async function uploadToCloudinary(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', UPLOAD_PRESET);
+    formData.append('cloud_name', CLOUD_NAME);
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    return data.secure_url;
+  }
+
+  // ── AUTH STATE ──
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('userEmail').textContent = user.email;
+      loadArtikel();
+      loadGaleri();
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'none';
+    }
+  });
+
+  // ── LOGIN ──
+  window.doLogin = async () => {
+    const email = document.getElementById('loginEmail').value;
+    const pass  = document.getElementById('loginPass').value;
+    const btn   = document.getElementById('loginBtn');
+    btn.textContent = 'Memproses...'; btn.disabled = true;
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch(e) {
+      showToast('Login gagal: ' + (e.code === 'auth/invalid-credential' ? 'Email/password salah' : e.message), 'error');
+      btn.textContent = 'Masuk'; btn.disabled = false;
+    }
+  };
+
+  // ── LOGOUT ──
+  window.doLogout = async () => {
+    await signOut(auth);
+    showToast('Berhasil keluar', 'success');
+  };
+
+  // ── ARTIKEL ──
+  window.submitArtikel = async () => {
+    const judul    = document.getElementById('artJudul').value.trim();
+    const kategori = document.getElementById('artKategori').value;
+    const isi      = document.getElementById('artIsi').value.trim();
+    const fileInput = document.getElementById('artFoto');
+    const btn      = document.getElementById('artBtn');
+
+    if (!judul || !isi) { showToast('Judul dan isi wajib diisi!', 'error'); return; }
+
+    btn.textContent = 'Menyimpan...'; btn.disabled = true;
+
+    try {
+      let fotoURL = '';
+      if (fileInput.files[0]) {
+        showToast('⬆️ Mengupload foto...', 'success');
+        fotoURL = await uploadToCloudinary(fileInput.files[0]);
+      }
+
+      await addDoc(collection(db, 'artikel'), {
+        judul, kategori, isi, fotoURL,
+        createdAt: serverTimestamp(),
+        views: 0, likes: 0
+      });
+
+      showToast('✅ Artikel berhasil dipublish!', 'success');
+      document.getElementById('artJudul').value = '';
+      document.getElementById('artIsi').value = '';
+      fileInput.value = '';
+      document.getElementById('artPreview').style.display = 'none';
+      loadArtikel();
+    } catch(e) {
+      showToast('Gagal: ' + e.message, 'error');
+    }
+    btn.textContent = 'Publish Artikel'; btn.disabled = false;
+  };
+
+  window.loadArtikel = async () => {
+    const container = document.getElementById('artikelList');
+    container.innerHTML = '<div class="loading-state">⏳ Memuat artikel...</div>';
+    try {
+      const q = query(collection(db, 'artikel'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      if (snap.empty) { container.innerHTML = '<div class="empty-state">📭 Belum ada artikel</div>'; return; }
+      container.innerHTML = '';
+      snap.forEach(d => {
+        const data = d.data();
+        const date = data.createdAt ? new Date(data.createdAt.seconds*1000).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '—';
+        container.innerHTML += `
+          <div class="list-card">
+            ${data.fotoURL ? `<img src="${data.fotoURL}" class="list-thumb" alt="">` : '<div class="list-thumb-placeholder">📄</div>'}
+            <div class="list-body">
+              <div class="list-cat">${data.kategori}</div>
+              <h4>${data.judul}</h4>
+              <p>${data.isi.substring(0,100)}...</p>
+              <div class="list-meta"><span>📅 ${date}</span><span>👁 ${data.views||0} dibaca</span></div>
+            </div>
+            <button class="btn-del" onclick="hapusArtikel('${d.id}')">🗑️</button>
+          </div>`;
+      });
+    } catch(e) { container.innerHTML = '<div class="empty-state">⚠️ Gagal memuat</div>'; }
+  };
+
+  window.hapusArtikel = async (id) => {
+    if (!confirm('Hapus artikel ini?')) return;
+    await deleteDoc(doc(db, 'artikel', id));
+    showToast('Artikel dihapus', 'success');
+    loadArtikel();
+  };
+
+  // ── GALERI ──
+  window.submitGaleri = async () => {
+    const fileInput = document.getElementById('galFile');
+    const caption   = document.getElementById('galCaption').value.trim();
+    const tipe      = document.getElementById('galTipe').value;
+    const btn       = document.getElementById('galBtn');
+
+    if (!fileInput.files[0]) { showToast('Pilih file terlebih dahulu!', 'error'); return; }
+
+    btn.textContent = 'Mengupload...'; btn.disabled = true;
+    const progWrap = document.getElementById('uploadProgress');
+    progWrap.style.display = 'block';
+
+    try {
+      const file = fileInput.files[0];
+      showToast('⬆️ Mengupload ke Cloudinary...', 'success');
+      const url = await uploadToCloudinary(file);
+
+      await addDoc(collection(db, 'galeri'), {
+        url, caption, tipe,
+        fileName: file.name,
+        createdAt: serverTimestamp()
+      });
+
+      showToast('✅ File berhasil diupload!', 'success');
+      fileInput.value = '';
+      document.getElementById('galCaption').value = '';
+      document.getElementById('galFilePreview').innerHTML = '';
+      progWrap.style.display = 'none';
+      loadGaleri();
+    } catch(e) {
+      showToast('Gagal upload: ' + e.message, 'error');
+    }
+    btn.textContent = 'Upload'; btn.disabled = false;
+    progWrap.style.display = 'none';
+  };
+
+  window.loadGaleri = async () => {
+    const container = document.getElementById('galeriGrid');
+    container.innerHTML = '<div class="loading-state">⏳ Memuat galeri...</div>';
+    try {
+      const q = query(collection(db, 'galeri'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      if (snap.empty) { container.innerHTML = '<div class="empty-state">📭 Belum ada foto/video</div>'; return; }
+      container.innerHTML = '';
+      snap.forEach(d => {
+        const data = d.data();
+        const isVideo = data.tipe === 'video';
+        container.innerHTML += `
+          <div class="gal-item">
+            ${isVideo
+              ? `<video src="${data.url}" class="gal-media" controls></video>`
+              : `<img src="${data.url}" class="gal-media" alt="${data.caption}">`
+            }
+            <div class="gal-info">
+              <span class="gal-tipe">${isVideo ? '🎬' : '📸'} ${data.tipe}</span>
+              <p>${data.caption || '—'}</p>
+            </div>
+            <button class="btn-del" onclick="hapusGaleri('${d.id}')">🗑️</button>
+          </div>`;
+      });
+    } catch(e) { container.innerHTML = '<div class="empty-state">⚠️ Gagal memuat</div>'; }
+  };
+
+  window.hapusGaleri = async (id) => {
+    if (!confirm('Hapus item ini?')) return;
+    await deleteDoc(doc(db, 'galeri', id));
+    showToast('Item dihapus', 'success');
+    loadGaleri();
+  };
+
+  // ── PENGUMUMAN ──
+  window.submitPengumuman = async () => {
+    const judul  = document.getElementById('pngJudul').value.trim();
+    const isi    = document.getElementById('pngIsi').value.trim();
+    const tipe   = document.getElementById('pngTipe').value;
+    const btn    = document.getElementById('pngBtn');
+    if (!judul || !isi) { showToast('Judul dan isi wajib diisi!', 'error'); return; }
+    btn.textContent = 'Menyimpan...'; btn.disabled = true;
+    try {
+      await addDoc(collection(db, 'pengumuman'), {
+        judul, isi, tipe, createdAt: serverTimestamp()
+      });
+      showToast('✅ Pengumuman dipublish!', 'success');
+      document.getElementById('pngJudul').value = '';
+      document.getElementById('pngIsi').value = '';
+    } catch(e) { showToast('Gagal: ' + e.message, 'error'); }
+    btn.textContent = 'Publish'; btn.disabled = false;
+  };
+
+
+  // ── AUTH STATE ──
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('userEmail').textContent = user.email;
+      loadArtikel();
+      loadGaleri();
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'none';
+    }
+  });
+
+  // ── LOGIN ──
+  window.doLogin = async () => {
+    const email = document.getElementById('loginEmail').value;
+    const pass  = document.getElementById('loginPass').value;
+    const btn   = document.getElementById('loginBtn');
+    btn.textContent = 'Memproses...'; btn.disabled = true;
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch(e) {
+      showToast('Login gagal: ' + (e.code === 'auth/invalid-credential' ? 'Email/password salah' : e.message), 'error');
+      btn.textContent = 'Masuk'; btn.disabled = false;
+    }
+  };
+
+  // ── LOGOUT ──
+  window.doLogout = async () => {
+    await signOut(auth);
+    showToast('Berhasil keluar', 'success');
+  };
+
+  // ── ARTIKEL ──
+  window.submitArtikel = async () => {
+    const judul    = document.getElementById('artJudul').value.trim();
+    const kategori = document.getElementById('artKategori').value;
+    const isi      = document.getElementById('artIsi').value.trim();
+    const fileInput = document.getElementById('artFoto');
+    const btn      = document.getElementById('artBtn');
+
+    if (!judul || !isi) { showToast('Judul dan isi wajib diisi!', 'error'); return; }
+
+    btn.textContent = 'Menyimpan...'; btn.disabled = true;
+
+    try {
+      let fotoURL = '';
+      if (fileInput.files[0]) {
+        const file = fileInput.files[0];
+        const storageRef = ref(storage, `artikel/${Date.now()}_${file.name}`);
+        await uploadBytes(storageRef, file);
+        fotoURL = await getDownloadURL(storageRef);
+      }
+
+      await addDoc(collection(db, 'artikel'), {
+        judul, kategori, isi, fotoURL,
+        createdAt: serverTimestamp(),
+        views: 0, likes: 0
+      });
+
+      showToast('✅ Artikel berhasil dipublish!', 'success');
+      document.getElementById('artJudul').value = '';
+      document.getElementById('artIsi').value = '';
+      fileInput.value = '';
+      document.getElementById('artPreview').style.display = 'none';
+      loadArtikel();
+    } catch(e) {
+      showToast('Gagal: ' + e.message, 'error');
+    }
+    btn.textContent = 'Publish Artikel'; btn.disabled = false;
+  };
+
+  window.loadArtikel = async () => {
+    const container = document.getElementById('artikelList');
+    container.innerHTML = '<div class="loading-state">⏳ Memuat artikel...</div>';
+    try {
+      const q = query(collection(db, 'artikel'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      if (snap.empty) { container.innerHTML = '<div class="empty-state">📭 Belum ada artikel</div>'; return; }
+      container.innerHTML = '';
+      snap.forEach(d => {
+        const data = d.data();
+        const date = data.createdAt ? new Date(data.createdAt.seconds*1000).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '—';
+        container.innerHTML += `
+          <div class="list-card">
+            ${data.fotoURL ? `<img src="${data.fotoURL}" class="list-thumb" alt="">` : '<div class="list-thumb-placeholder">📄</div>'}
+            <div class="list-body">
+              <div class="list-cat">${data.kategori}</div>
+              <h4>${data.judul}</h4>
+              <p>${data.isi.substring(0,100)}...</p>
+              <div class="list-meta"><span>📅 ${date}</span><span>👁 ${data.views||0} dibaca</span></div>
+            </div>
+            <button class="btn-del" onclick="hapusArtikel('${d.id}')">🗑️</button>
+          </div>`;
+      });
+    } catch(e) { container.innerHTML = '<div class="empty-state">⚠️ Gagal memuat</div>'; }
+  };
+
+  window.hapusArtikel = async (id) => {
+    if (!confirm('Hapus artikel ini?')) return;
+    await deleteDoc(doc(db, 'artikel', id));
+    showToast('Artikel dihapus', 'success');
+    loadArtikel();
+  };
+
+  // ── GALERI ──
+  window.submitGaleri = async () => {
+    const fileInput = document.getElementById('galFile');
+    const caption   = document.getElementById('galCaption').value.trim();
+    const tipe      = document.getElementById('galTipe').value;
+    const btn       = document.getElementById('galBtn');
+
+    if (!fileInput.files[0]) { showToast('Pilih file terlebih dahulu!', 'error'); return; }
+
+    btn.textContent = 'Mengupload...'; btn.disabled = true;
+    const progWrap = document.getElementById('uploadProgress');
+    progWrap.style.display = 'block';
+
+    try {
+      const file = fileInput.files[0];
+      const storageRef = ref(storage, `galeri/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+
+      await addDoc(collection(db, 'galeri'), {
+        url, caption, tipe,
+        fileName: file.name,
+        createdAt: serverTimestamp()
+      });
+
+      showToast('✅ File berhasil diupload!', 'success');
+      fileInput.value = '';
+      document.getElementById('galCaption').value = '';
+      document.getElementById('galFilePreview').innerHTML = '';
+      progWrap.style.display = 'none';
+      loadGaleri();
+    } catch(e) {
+      showToast('Gagal upload: ' + e.message, 'error');
+    }
+    btn.textContent = 'Upload'; btn.disabled = false;
+    progWrap.style.display = 'none';
+  };
+
+  window.loadGaleri = async () => {
+    const container = document.getElementById('galeriGrid');
+    container.innerHTML = '<div class="loading-state">⏳ Memuat galeri...</div>';
+    try {
+      const q = query(collection(db, 'galeri'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      if (snap.empty) { container.innerHTML = '<div class="empty-state">📭 Belum ada foto/video</div>'; return; }
+      container.innerHTML = '';
+      snap.forEach(d => {
+        const data = d.data();
+        const isVideo = data.tipe === 'video';
+        container.innerHTML += `
+          <div class="gal-item">
+            ${isVideo
+              ? `<video src="${data.url}" class="gal-media" controls></video>`
+              : `<img src="${data.url}" class="gal-media" alt="${data.caption}">`
+            }
+            <div class="gal-info">
+              <span class="gal-tipe">${isVideo ? '🎬' : '📸'} ${data.tipe}</span>
+              <p>${data.caption || '—'}</p>
+            </div>
+            <button class="btn-del" onclick="hapusGaleri('${d.id}')">🗑️</button>
+          </div>`;
+      });
+    } catch(e) { container.innerHTML = '<div class="empty-state">⚠️ Gagal memuat</div>'; }
+  };
+
+  window.hapusGaleri = async (id) => {
+    if (!confirm('Hapus item ini?')) return;
+    await deleteDoc(doc(db, 'galeri', id));
+    showToast('Item dihapus', 'success');
+    loadGaleri();
+  };
+
+  // ── PENGUMUMAN ──
+  window.submitPengumuman = async () => {
+    const judul  = document.getElementById('pngJudul').value.trim();
+    const isi    = document.getElementById('pngIsi').value.trim();
+    const tipe   = document.getElementById('pngTipe').value;
+    const btn    = document.getElementById('pngBtn');
+    if (!judul || !isi) { showToast('Judul dan isi wajib diisi!', 'error'); return; }
+    btn.textContent = 'Menyimpan...'; btn.disabled = true;
+    try {
+      await addDoc(collection(db, 'pengumuman'), {
+        judul, isi, tipe, createdAt: serverTimestamp()
+      });
+      showToast('✅ Pengumuman dipublish!', 'success');
+      document.getElementById('pngJudul').value = '';
+      document.getElementById('pngIsi').value = '';
+    } catch(e) { showToast('Gagal: ' + e.message, 'error'); }
+    btn.textContent = 'Publish'; btn.disabled = false;
+  };
+</script>
+
+<style>
+  :root {
+    --emerald: #1A4A3C;
+    --emerald-mid: #245C4A;
+    --emerald-light: #2E7A60;
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --cream: #FAF6EE;
+    --white: #FFFFFF;
+    --danger: #EF4444;
+    --success: #10B981;
+    --text: #1A1A1A;
+    --text-mid: #4A4A4A;
+    --text-light: #9A9A8A;
+    --border: rgba(0,0,0,0.08);
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'DM Sans',sans-serif; background:#F0EDE8; color:var(--text); min-height:100vh; }
+  ::-webkit-scrollbar { width:5px; }
+  ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:3px; }
+
+  /* ── LOGIN SCREEN ── */
+  #loginScreen {
+    display:flex; align-items:center; justify-content:center;
+    min-height:100vh;
+    background: linear-gradient(160deg, var(--emerald) 0%, #0D2820 100%);
+    position:relative; overflow:hidden;
+  }
+  #loginScreen::before {
+    content:'بِسْمِ اللَّهِ';
+    position:absolute; font-family:'Amiri',serif;
+    font-size:260px; color:rgba(201,168,76,0.05);
+    top:50%; left:50%; transform:translate(-50%,-50%);
+    pointer-events:none; white-space:nowrap;
+  }
+
+  .login-card {
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    backdrop-filter:blur(20px);
+    border-radius:28px; padding:48px 40px;
+    width:100%; max-width:400px;
+    position:relative; z-index:1;
+    animation: fadeUp 0.6s ease both;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  .login-logo { text-align:center; margin-bottom:32px; }
+  .login-logo .badge {
+    width:64px; height:64px; border-radius:18px; margin:0 auto 14px;
+    background:linear-gradient(135deg,var(--gold),#A07830);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Amiri',serif; font-size:26px; color:white;
+    box-shadow:0 8px 24px rgba(201,168,76,0.35);
+  }
+  .login-logo h2 { font-family:'Playfair Display',serif; font-size:22px; color:white; }
+  .login-logo p { font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px; letter-spacing:1px; text-transform:uppercase; }
+
+  .login-field { margin-bottom:18px; }
+  .login-field label { display:block; font-size:12px; color:rgba(255,255,255,0.5); font-weight:500; margin-bottom:8px; letter-spacing:0.5px; text-transform:uppercase; }
+  .login-field input {
+    width:100%; background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15); border-radius:12px;
+    padding:14px 18px; color:white; font-size:14px;
+    font-family:'DM Sans',sans-serif; outline:none;
+    transition:all 0.25s ease;
+  }
+  .login-field input::placeholder { color:rgba(255,255,255,0.3); }
+  .login-field input:focus { border-color:var(--gold); background:rgba(255,255,255,0.12); }
+
+  .btn-login {
+    width:100%; padding:15px; border-radius:12px; border:none; cursor:pointer;
+    background:linear-gradient(135deg,var(--gold),#A07830);
+    color:white; font-size:15px; font-weight:600;
+    font-family:'DM Sans',sans-serif;
+    box-shadow:0 8px 24px rgba(201,168,76,0.3);
+    transition:all 0.3s ease; margin-top:8px;
+  }
+  .btn-login:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(201,168,76,0.45); }
+  .btn-login:disabled { opacity:0.6; transform:none; }
+
+  /* ── DASHBOARD ── */
+  #dashboard { display:none; min-height:100vh; }
+
+  /* Sidebar */
+  .layout { display:flex; min-height:100vh; }
+
+  .sidebar {
+    width:260px; flex-shrink:0;
+    background:linear-gradient(180deg, var(--emerald) 0%, #0D2820 100%);
+    position:fixed; top:0; left:0; height:100vh;
+    display:flex; flex-direction:column;
+    padding:0 0 20px; overflow-y:auto; z-index:100;
+  }
+
+  .sidebar-brand {
+    padding:28px 24px 24px;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    margin-bottom:12px;
+  }
+  .sidebar-brand .brand-badge {
+    width:44px; height:44px; border-radius:12px;
+    background:linear-gradient(135deg,var(--gold),#A07830);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Amiri',serif; font-size:18px; color:white;
+    margin-bottom:12px;
+  }
+  .sidebar-brand h3 { font-family:'Playfair Display',serif; font-size:16px; color:white; font-weight:700; }
+  .sidebar-brand p { font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px; letter-spacing:0.5px; }
+
+  .sidebar-section { padding:0 12px; margin-bottom:4px; }
+  .sidebar-label { font-size:10px; color:rgba(255,255,255,0.3); letter-spacing:2px; text-transform:uppercase; font-weight:600; padding:8px 12px 6px; }
+
+  .nav-item {
+    display:flex; align-items:center; gap:12px;
+    padding:11px 14px; border-radius:12px; cursor:pointer;
+    color:rgba(255,255,255,0.6); font-size:14px; font-weight:500;
+    transition:all 0.2s ease; margin-bottom:2px;
+    border:none; background:none; width:100%; text-align:left;
+  }
+  .nav-item:hover { background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.9); }
+  .nav-item.active { background:rgba(201,168,76,0.15); color:var(--gold-light); }
+  .nav-item .nav-icon { font-size:18px; width:22px; text-align:center; }
+
+  .sidebar-footer {
+    margin-top:auto; padding:16px 24px;
+    border-top:1px solid rgba(255,255,255,0.06);
+  }
+  .user-info { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .user-avatar {
+    width:36px; height:36px; border-radius:10px;
+    background:linear-gradient(135deg,var(--gold),#A07830);
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; flex-shrink:0;
+  }
+  .user-info .info h4 { font-size:12px; color:white; font-weight:600; }
+  .user-info .info p { font-size:11px; color:rgba(255,255,255,0.4); }
+  .btn-logout {
+    width:100%; padding:10px; border-radius:10px; border:none; cursor:pointer;
+    background:rgba(239,68,68,0.15); color:#FCA5A5;
+    font-size:13px; font-weight:500; font-family:'DM Sans',sans-serif;
+    transition:all 0.2s ease;
+  }
+  .btn-logout:hover { background:rgba(239,68,68,0.25); }
+
+  /* Main content */
+  .main-content {
+    margin-left:260px; flex:1; padding:32px;
+    min-height:100vh;
+  }
+
+  /* Topbar */
+  .topbar {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:32px; flex-wrap:wrap; gap:16px;
+  }
+  .topbar h1 { font-family:'Playfair Display',serif; font-size:28px; font-weight:800; color:var(--emerald); }
+  .topbar p { font-size:14px; color:var(--text-light); margin-top:3px; }
+
+  /* Quick stats */
+  .quick-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:32px; }
+  .qs-card {
+    background:var(--white); border-radius:18px; padding:22px 20px;
+    border:1px solid var(--border); box-shadow:var(--shadow);
+    display:flex; align-items:center; gap:16px;
+    transition:transform 0.2s ease;
+  }
+  .qs-card:hover { transform:translateY(-3px); }
+  .qs-icon { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .qi-green { background:rgba(16,185,129,0.1); }
+  .qi-blue  { background:rgba(59,130,246,0.1); }
+  .qi-gold  { background:rgba(201,168,76,0.1); }
+  .qi-purple{ background:rgba(139,92,246,0.1); }
+  .qs-info .num { font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:var(--emerald); line-height:1; }
+  .qs-info .lbl { font-size:12px; color:var(--text-light); margin-top:3px; }
+
+  /* Panels */
+  .panel {
+    background:var(--white); border-radius:20px; padding:28px;
+    border:1px solid var(--border); box-shadow:var(--shadow);
+    margin-bottom:24px; display:none;
+  }
+  .panel.active { display:block; animation:fadeUp 0.4s ease both; }
+
+  .panel-title {
+    font-family:'Playfair Display',serif; font-size:20px; font-weight:700;
+    color:var(--emerald); margin-bottom:24px;
+    display:flex; align-items:center; gap:10px;
+    padding-bottom:16px; border-bottom:1px solid var(--border);
+  }
+
+  /* Form elements */
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .form-group { margin-bottom:16px; }
+  .form-group.full { grid-column:span 2; }
+  .form-group label { display:block; font-size:12px; font-weight:600; color:var(--text-mid); margin-bottom:8px; letter-spacing:0.5px; text-transform:uppercase; }
+  .form-group input, .form-group textarea, .form-group select {
+    width:100%; border:1.5px solid var(--border); border-radius:12px;
+    padding:12px 16px; font-size:14px; color:var(--text);
+    font-family:'DM Sans',sans-serif; outline:none;
+    background:var(--cream); transition:all 0.25s ease;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color:var(--emerald); background:white; box-shadow:0 0 0 3px rgba(26,74,60,0.08); }
+  .form-group textarea { resize:vertical; min-height:140px; }
+
+  /* File upload zone */
+  .upload-zone {
+    border:2px dashed rgba(26,74,60,0.2); border-radius:14px;
+    padding:32px 20px; text-align:center; cursor:pointer;
+    background:var(--cream); transition:all 0.25s ease;
+    position:relative;
+  }
+  .upload-zone:hover { border-color:var(--emerald); background:rgba(26,74,60,0.03); }
+  .upload-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+  .upload-zone .uz-icon { font-size:36px; margin-bottom:10px; }
+  .upload-zone p { font-size:14px; color:var(--text-light); }
+  .upload-zone span { font-size:12px; color:var(--text-light); opacity:0.7; }
+
+  #galFilePreview { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+  .preview-thumb { width:80px; height:80px; object-fit:cover; border-radius:10px; border:2px solid var(--border); }
+
+  #artPreview { margin-top:12px; display:none; }
+  #artPreview img { width:100%; max-height:200px; object-fit:cover; border-radius:12px; }
+
+  .progress-bar { height:6px; background:var(--border); border-radius:100px; overflow:hidden; margin-top:12px; display:none; }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--emerald),var(--emerald-light)); border-radius:100px; animation:progAnim 1.5s ease infinite; }
+  @keyframes progAnim { 0%{width:0%} 50%{width:70%} 100%{width:95%} }
+
+  /* Buttons */
+  .btn-primary {
+    background:linear-gradient(135deg,var(--emerald),var(--emerald-light));
+    color:white; border:none; cursor:pointer; padding:13px 28px;
+    border-radius:12px; font-size:14px; font-weight:600;
+    font-family:'DM Sans',sans-serif; transition:all 0.3s ease;
+    box-shadow:0 4px 16px rgba(26,74,60,0.25);
+  }
+  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(26,74,60,0.35); }
+  .btn-primary:disabled { opacity:0.6; transform:none; cursor:not-allowed; }
+
+  .btn-gold {
+    background:linear-gradient(135deg,var(--gold),#A07830);
+    color:white; border:none; cursor:pointer; padding:13px 28px;
+    border-radius:12px; font-size:14px; font-weight:600;
+    font-family:'DM Sans',sans-serif; transition:all 0.3s ease;
+    box-shadow:0 4px 16px rgba(201,168,76,0.3);
+  }
+  .btn-gold:hover { transform:translateY(-2px); }
+  .btn-gold:disabled { opacity:0.6; transform:none; cursor:not-allowed; }
+
+  /* List cards */
+  .list-card {
+    display:flex; gap:16px; align-items:flex-start;
+    padding:16px; border-radius:14px; border:1px solid var(--border);
+    margin-bottom:12px; background:var(--cream);
+    transition:all 0.2s ease;
+  }
+  .list-card:hover { border-color:rgba(26,74,60,0.2); box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+  .list-thumb { width:70px; height:70px; object-fit:cover; border-radius:10px; flex-shrink:0; }
+  .list-thumb-placeholder { width:70px; height:70px; border-radius:10px; background:var(--emerald); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+  .list-body { flex:1; min-width:0; }
+  .list-cat { display:inline-block; background:rgba(26,74,60,0.1); color:var(--emerald); border-radius:6px; padding:2px 10px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+  .list-body h4 { font-size:15px; font-weight:600; color:var(--text); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .list-body p { font-size:13px; color:var(--text-light); line-height:1.5; }
+  .list-meta { display:flex; gap:14px; margin-top:8px; }
+  .list-meta span { font-size:12px; color:var(--text-light); }
+
+  .btn-del { background:rgba(239,68,68,0.08); color:#EF4444; border:none; cursor:pointer; width:36px; height:36px; border-radius:10px; font-size:16px; flex-shrink:0; transition:all 0.2s ease; }
+  .btn-del:hover { background:rgba(239,68,68,0.15); transform:scale(1.1); }
+
+  /* Galeri grid */
+  .gal-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; }
+  .gal-item { border-radius:14px; overflow:hidden; border:1px solid var(--border); position:relative; background:var(--cream); }
+  .gal-media { width:100%; height:160px; object-fit:cover; display:block; }
+  .gal-info { padding:10px 12px; }
+  .gal-tipe { font-size:11px; color:var(--text-light); }
+  .gal-info p { font-size:13px; color:var(--text); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .gal-item .btn-del { position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.5); color:white; }
+
+  /* Empty/loading states */
+  .empty-state, .loading-state { text-align:center; padding:40px; color:var(--text-light); font-size:14px; }
+
+  /* Badge tipe pengumuman */
+  .badge-select { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+  .badge-opt { padding:8px 18px; border-radius:100px; border:1.5px solid var(--border); background:var(--cream); font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s ease; font-family:'DM Sans',sans-serif; color:var(--text-mid); }
+  .badge-opt.sel-penting { border-color:#EF4444; background:rgba(239,68,68,0.08); color:#EF4444; }
+  .badge-opt.sel-info { border-color:#3B82F6; background:rgba(59,130,246,0.08); color:#3B82F6; }
+  .badge-opt.sel-umum { border-color:var(--gold); background:rgba(201,168,76,0.08); color:var(--gold-dark); }
+
+  /* Toast */
+  #toast {
+    position:fixed; bottom:28px; right:28px; z-index:9999;
+    padding:14px 22px; border-radius:14px;
+    font-size:14px; font-weight:500; font-family:'DM Sans',sans-serif;
+    box-shadow:0 8px 32px rgba(0,0,0,0.15);
+    transform:translateY(80px); opacity:0;
+    transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events:none; max-width:320px;
+  }
+  #toast.show { transform:translateY(0); opacity:1; }
+  #toast.success { background:var(--emerald); color:white; }
+  #toast.error   { background:#EF4444; color:white; }
+
+  /* Config modal */
+  .config-banner {
+    background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.05));
+    border:1.5px solid rgba(201,168,76,0.3); border-radius:16px;
+    padding:20px 24px; margin-bottom:28px;
+    display:flex; gap:16px; align-items:flex-start;
+  }
+  .config-banner .icon { font-size:28px; flex-shrink:0; }
+  .config-banner h4 { font-size:15px; font-weight:600; color:var(--emerald); margin-bottom:6px; }
+  .config-banner p { font-size:13px; color:var(--text-mid); line-height:1.6; }
+  .config-banner code { background:rgba(26,74,60,0.08); padding:2px 6px; border-radius:4px; font-size:12px; color:var(--emerald); }
+
+  /* Responsive */
+  @media (max-width:900px) {
+    .sidebar { width:70px; }
+    .sidebar-brand h3, .sidebar-brand p, .nav-item span, .sidebar-label, .sidebar-footer .info, #userEmail { display:none; }
+    .nav-item { justify-content:center; padding:12px; }
+    .main-content { margin-left:70px; padding:20px; }
+    .quick-stats { grid-template-columns:1fr 1fr; }
+    .form-grid { grid-template-columns:1fr; }
+    .form-group.full { grid-column:span 1; }
+  }
+  @media (max-width:600px) {
+    .sidebar { display:none; }
+    .main-content { margin-left:0; }
+    .quick-stats { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="badge">أبو</div>
+      <h2>Admin Panel</h2>
+      <p>Pondok Pesantren Abu Hurairah Ra.</p>
+    </div>
+    <div class="login-field">
+      <label>Email Admin</label>
+      <input type="email" id="loginEmail" placeholder="admin@ponpes-ara.com" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="doLogin()">🔐 Masuk</button>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-badge">أبو</div>
+        <h3>Ponpes ARA</h3>
+        <p>Admin Panel</p>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Menu Utama</div>
+        <button class="nav-item active" onclick="showPanel('home',this)">
+          <span class="nav-icon">🏠</span><span>Dashboard</span>
+        </button>
+        <button class="nav-item" onclick="showPanel('artikel',this)">
+          <span class="nav-icon">✍️</span><span>Post Artikel</span>
+        </button>
+        <button class="nav-item" onclick="showPanel('galeri',this)">
+          <span class="nav-icon">📸</span><span>Upload Galeri</span>
+        </button>
+        <button class="nav-item" onclick="showPanel('pengumuman',this)">
+          <span class="nav-icon">📢</span><span>Pengumuman</span>
+        </button>
+      </div>
+
+      <div class="sidebar-section" style="margin-top:8px">
+        <div class="sidebar-label">Pengaturan</div>
+        <button class="nav-item" onclick="showPanel('panduan',this)">
+          <span class="nav-icon">📖</span><span>Panduan Setup</span>
+        </button>
+        <a href="index.html" target="_blank" class="nav-item" style="text-decoration:none">
+          <span class="nav-icon">🌐</span><span>Lihat Website</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar">👤</div>
+          <div class="info">
+            <h4>Admin</h4>
+            <p id="userEmail" style="font-size:10px;color:rgba(255,255,255,0.4)">—</p>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="doLogout()">🚪 Keluar</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+
+      <!-- ── HOME PANEL ── -->
+      <div id="panel-home" class="panel active">
+        <div class="topbar">
+          <div>
+            <h1>Selamat Datang 👋</h1>
+            <p>Panel admin Pondok Pesantren Tahfidz & Dakwah Abu Hurairah Ra.</p>
+          </div>
+        </div>
+
+        <div class="config-banner">
+          <div class="icon">⚙️</div>
+          <div>
+            <h4>Langkah Pertama: Setup Firebase</h4>
+            <p>Sebelum bisa post artikel dan upload foto, Anda perlu menghubungkan panel ini ke Firebase. Klik <strong>"Panduan Setup"</strong> di menu kiri untuk langkah-langkahnya. Hanya perlu dilakukan <strong>sekali saja</strong> dan gratis!</p>
+          </div>
+        </div>
+
+        <div class="quick-stats">
+          <div class="qs-card">
+            <div class="qs-icon qi-blue">✍️</div>
+            <div class="qs-info"><div class="num" id="countArtikel">—</div><div class="lbl">Total Artikel</div></div>
+          </div>
+          <div class="qs-card">
+            <div class="qs-icon qi-green">📸</div>
+            <div class="qs-info"><div class="num" id="countGaleri">—</div><div class="lbl">File Galeri</div></div>
+          </div>
+          <div class="qs-card">
+            <div class="qs-icon qi-gold">📢</div>
+            <div class="qs-info"><div class="num" id="countPengumuman">—</div><div class="lbl">Pengumuman</div></div>
+          </div>
+          <div class="qs-card">
+            <div class="qs-icon qi-purple">👁️</div>
+            <div class="qs-info"><div class="num">Live</div><div class="lbl">Website Aktif</div></div>
+          </div>
+        </div>
+
+        <div style="background:var(--cream);border-radius:16px;padding:24px;border:1px solid var(--border)">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--emerald);margin-bottom:16px;">📋 Akses Cepat</h3>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+            <button onclick="showPanel('artikel',document.querySelector('[onclick*=\"artikel\"]'))" style="padding:16px;border-radius:14px;border:1.5px dashed rgba(26,74,60,0.2);background:white;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--emerald);font-weight:500;transition:all 0.2s" onmouseover="this.style.background='rgba(26,74,60,0.05)'" onmouseout="this.style.background='white'">✍️<br><span style="font-size:12px;margin-top:4px;display:block">Tulis Artikel</span></button>
+            <button onclick="showPanel('galeri',document.querySelector('[onclick*=\"galeri\"]'))" style="padding:16px;border-radius:14px;border:1.5px dashed rgba(26,74,60,0.2);background:white;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--emerald);font-weight:500;transition:all 0.2s" onmouseover="this.style.background='rgba(26,74,60,0.05)'" onmouseout="this.style.background='white'">📸<br><span style="font-size:12px;margin-top:4px;display:block">Upload Foto</span></button>
+            <button onclick="showPanel('pengumuman',document.querySelector('[onclick*=\"pengumuman\"]'))" style="padding:16px;border-radius:14px;border:1.5px dashed rgba(26,74,60,0.2);background:white;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--emerald);font-weight:500;transition:all 0.2s" onmouseover="this.style.background='rgba(26,74,60,0.05)'" onmouseout="this.style.background='white'">📢<br><span style="font-size:12px;margin-top:4px;display:block">Pengumuman</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ARTIKEL PANEL ── -->
+      <div id="panel-artikel" class="panel">
+        <div class="panel-title">✍️ Post Artikel Baru</div>
+
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Judul Artikel</label>
+            <input type="text" id="artJudul" placeholder="Contoh: Metode Talaqi dalam Tahfidz Al-Qur'an">
+          </div>
+          <div class="form-group">
+            <label>Kategori</label>
+            <select id="artKategori">
+              <option value="Tahfidz">📖 Tahfidz</option>
+              <option value="Dakwah">🎤 Dakwah</option>
+              <option value="Prestasi">🏆 Prestasi</option>
+              <option value="Kegiatan">🎯 Kegiatan</option>
+              <option value="Pengumuman">📢 Pengumuman</option>
+              <option value="Umum">📄 Umum</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Foto Artikel (opsional)</label>
+            <div class="upload-zone">
+              <input type="file" id="artFoto" accept="image/*" onchange="previewArtFoto(this)">
+              <div class="uz-icon">🖼️</div>
+              <p>Klik untuk pilih foto</p>
+              <span>JPG, PNG, WEBP — maks 5MB</span>
+            </div>
+            <div id="artPreview"></div>
+          </div>
+          <div class="form-group full">
+            <label>Isi Artikel</label>
+            <textarea id="artIsi" placeholder="Tulis isi artikel di sini...&#10;&#10;Anda bisa menulis artikel panjang, tips, berita kegiatan, dll." style="min-height:200px"></textarea>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:12px">
+          <button class="btn-primary" id="artBtn" onclick="submitArtikel()">🚀 Publish Artikel</button>
+        </div>
+
+        <div style="margin-top:32px;padding-top:28px;border-top:1px solid var(--border)">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--emerald);margin-bottom:20px;font-size:18px">📋 Daftar Artikel</h3>
+          <div id="artikelList"><div class="loading-state">⏳ Memuat...</div></div>
+        </div>
+      </div>
+
+      <!-- ── GALERI PANEL ── -->
+      <div id="panel-galeri" class="panel">
+        <div class="panel-title">📸 Upload Foto & Video</div>
+
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Pilih File</label>
+            <div class="upload-zone" style="padding:48px 20px">
+              <input type="file" id="galFile" accept="image/*,video/*" multiple onchange="previewGalFile(this)">
+              <div class="uz-icon">☁️</div>
+              <p>Drag & drop atau klik untuk pilih</p>
+              <span>Foto: JPG, PNG, WEBP • Video: MP4, MOV — maks 50MB</span>
+            </div>
+            <div id="galFilePreview"></div>
+            <div class="progress-bar" id="uploadProgress"><div class="progress-fill"></div></div>
+          </div>
+          <div class="form-group">
+            <label>Keterangan / Caption</label>
+            <input type="text" id="galCaption" placeholder="Contoh: Kegiatan Halaqah Pagi">
+          </div>
+          <div class="form-group">
+            <label>Tipe Konten</label>
+            <select id="galTipe">
+              <option value="foto">📸 Foto</option>
+              <option value="video">🎬 Video</option>
+              <option value="kegiatan">🎯 Kegiatan</option>
+              <option value="prestasi">🏆 Prestasi</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end">
+          <button class="btn-gold" id="galBtn" onclick="submitGaleri()">⬆️ Upload ke Galeri</button>
+        </div>
+
+        <div style="margin-top:32px;padding-top:28px;border-top:1px solid var(--border)">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--emerald);margin-bottom:20px;font-size:18px">🖼️ Galeri Tersimpan</h3>
+          <div id="galeriGrid" class="gal-grid"><div class="loading-state">⏳ Memuat...</div></div>
+        </div>
+      </div>
+
+      <!-- ── PENGUMUMAN PANEL ── -->
+      <div id="panel-pengumuman" class="panel">
+        <div class="panel-title">📢 Buat Pengumuman</div>
+
+        <div class="form-group">
+          <label>Tipe Pengumuman</label>
+          <div class="badge-select">
+            <button class="badge-opt sel-penting" onclick="setPngTipe('Penting',this)">🔴 Penting</button>
+            <button class="badge-opt" onclick="setPngTipe('Info',this)">🔵 Info</button>
+            <button class="badge-opt" onclick="setPngTipe('Umum',this)">🟡 Umum</button>
+            <button class="badge-opt" onclick="setPngTipe('Akademik',this)">📚 Akademik</button>
+          </div>
+          <input type="hidden" id="pngTipe" value="Penting">
+        </div>
+        <div class="form-group">
+          <label>Judul Pengumuman</label>
+          <input type="text" id="pngJudul" placeholder="Contoh: Penerimaan Santri Baru 2025/2026">
+        </div>
+        <div class="form-group">
+          <label>Isi Pengumuman</label>
+          <textarea id="pngIsi" placeholder="Tulis detail pengumuman di sini..."></textarea>
+        </div>
+        <div style="display:flex;justify-content:flex-end">
+          <button class="btn-primary" id="pngBtn" onclick="submitPengumuman()">📢 Publish Pengumuman</button>
+        </div>
+      </div>
+
+      <!-- ── PANDUAN PANEL ── -->
+      <div id="panel-panduan" class="panel">
+        <div class="panel-title">📖 Panduan Setup Firebase</div>
+
+        <div style="display:flex;flex-direction:column;gap:20px">
+
+          <div style="background:var(--cream);border-radius:16px;padding:24px;border:1px solid var(--border)">
+            <h4 style="color:var(--emerald);font-size:16px;margin-bottom:12px">🔥 Langkah 1 — Buat Project Firebase</h4>
+            <ol style="padding-left:20px;font-size:14px;color:var(--text-mid);line-height:2">
+              <li>Buka <strong>console.firebase.google.com</strong></li>
+              <li>Login dengan akun Google</li>
+              <li>Klik <strong>"Add Project"</strong> → beri nama <code style="background:rgba(26,74,60,0.1);padding:2px 6px;border-radius:4px">ponpes-ara</code></li>
+              <li>Nonaktifkan Google Analytics (opsional) → <strong>"Create Project"</strong></li>
+            </ol>
+          </div>
+
+          <div style="background:var(--cream);border-radius:16px;padding:24px;border:1px solid var(--border)">
+            <h4 style="color:var(--emerald);font-size:16px;margin-bottom:12px">☁️ Langkah 2 — Buat Upload Preset di Cloudinary</h4>
+            <ol style="padding-left:20px;font-size:14px;color:var(--text-mid);line-height:2">
+              <li>Buka <strong>console.cloudinary.com</strong> → login</li>
+              <li>Klik ikon ⚙️ <strong>Settings</strong> → pilih <strong>"Upload"</strong></li>
+              <li>Scroll ke bawah ke bagian <strong>"Upload presets"</strong></li>
+              <li>Klik <strong>"Add upload preset"</strong></li>
+              <li>Isi <strong>Preset name</strong> dengan: <code style="background:rgba(26,74,60,0.1);padding:2px 6px;border-radius:4px">ponpes_ara</code></li>
+              <li>Ubah <strong>Signing Mode</strong> menjadi <strong>Unsigned</strong></li>
+              <li>Klik <strong>"Save"</strong></li>
+            </ol>
+            <p style="font-size:13px;color:var(--text-mid);margin-top:10px;padding:10px;background:rgba(201,168,76,0.08);border-radius:8px;border-left:3px solid var(--gold)">
+              ✅ Cloud Name sudah terpasang: <strong>djsioi5rc</strong>
+            </p>
+          </div>
+
+          <div style="background:var(--cream);border-radius:16px;padding:24px;border:1px solid var(--border)">
+            <h4 style="color:var(--emerald);font-size:16px;margin-bottom:12px">🔑 Langkah 3 — Ambil Config & Pasang</h4>
+            <ol style="padding-left:20px;font-size:14px;color:var(--text-mid);line-height:2">
+              <li>Di Project Settings (ikon ⚙️) → <strong>"Your apps"</strong> → klik ikon <strong>&lt;/&gt;</strong> (Web)</li>
+              <li>Daftarkan app → copy kode <code style="background:rgba(26,74,60,0.1);padding:2px 6px;border-radius:4px">firebaseConfig</code></li>
+              <li>Buka file <strong>admin.html</strong> ini → cari tulisan <code style="background:rgba(26,74,60,0.1);padding:2px 6px;border-radius:4px">GANTI_API_KEY</code></li>
+              <li>Ganti semua nilai <strong>GANTI_...</strong> dengan config dari Firebase Anda</li>
+              <li>Lakukan hal yang sama di <strong>index.html</strong></li>
+            </ol>
+          </div>
+
+          <div style="background:var(--cream);border-radius:16px;padding:24px;border:1px solid var(--border)">
+            <h4 style="color:var(--emerald);font-size:16px;margin-bottom:12px">🛡️ Langkah 4 — Atur Rules Firestore & Storage</h4>
+            <p style="font-size:13px;color:var(--text-mid);margin-bottom:12px">Di Firestore → Rules, ganti dengan:</p>
+            <pre style="background:#1A4A3C;color:#E8C96A;padding:16px;border-radius:12px;font-size:12px;overflow-x:auto;line-height:1.6">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}</pre>
+            <p style="font-size:13px;color:var(--text-mid);margin:12px 0">Di Storage → Rules, ganti dengan:</p>
+            <pre style="background:#1A4A3C;color:#E8C96A;padding:16px;border-radius:12px;font-size:12px;overflow-x:auto;line-height:1.6">rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}</pre>
+          </div>
+
+          <div style="background:linear-gradient(135deg,rgba(26,74,60,0.08),rgba(26,74,60,0.03));border-radius:16px;padding:24px;border:1.5px solid rgba(26,74,60,0.15)">
+            <h4 style="color:var(--emerald);font-size:16px;margin-bottom:8px">✅ Langkah 5 — Upload ke GitHub</h4>
+            <p style="font-size:14px;color:var(--text-mid);line-height:1.8">Upload kedua file <strong>index.html</strong> dan <strong>admin.html</strong> ke repository GitHub Anda. Akses admin panel di:<br>
+            <code style="background:rgba(26,74,60,0.1);padding:4px 10px;border-radius:6px;font-size:13px">https://[username].github.io/ponpes-ara/admin.html</code></p>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+  // ── PANEL NAVIGATION ──
+  function showPanel(name, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
+  // ── TOAST ──
+  function showToast(msg, type='success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = 'show ' + type;
+    setTimeout(() => t.className = '', 3500);
+  }
+
+  // ── FILE PREVIEWS ──
+  function previewArtFoto(input) {
+    const prev = document.getElementById('artPreview');
+    if (input.files[0]) {
+      const url = URL.createObjectURL(input.files[0]);
+      prev.innerHTML = `<img src="${url}" alt="preview">`;
+      prev.style.display = 'block';
+    }
+  }
+
+  function previewGalFile(input) {
+    const prev = document.getElementById('galFilePreview');
+    prev.innerHTML = '';
+    Array.from(input.files).forEach(file => {
+      const url = URL.createObjectURL(file);
+      if (file.type.startsWith('image/')) {
+        prev.innerHTML += `<img src="${url}" class="preview-thumb" alt="">`;
+      } else {
+        prev.innerHTML += `<div class="preview-thumb" style="display:flex;align-items:center;justify-content:center;background:#1A4A3C;color:white;font-size:24px">🎬</div>`;
+      }
+    });
+  }
+
+  // ── PENGUMUMAN TIPE ──
+  function setPngTipe(val, btn) {
+    document.querySelectorAll('.badge-opt').forEach(b => b.className = 'badge-opt');
+    const map = {Penting:'sel-penting', Info:'sel-info', Umum:'sel-umum', Akademik:'sel-umum'};
+    btn.classList.add(map[val] || 'sel-info');
+    document.getElementById('pngTipe').value = val;
+  }
+
+  // ── ENTER KEY LOGIN ──
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+      doLogin();
+    }
+  });
+</script>
+</body>
+</html>
